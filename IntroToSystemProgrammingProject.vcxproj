@@ -18,6 +18,26 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Forum.c" />
+    <ClCompile Include="Message.c" />
+    <ClCompile Include="PrivateMsgBox.c" />
+    <ClCompile Include="Subject.c" />
+    <ClCompile Include="Thread.c" />
+    <ClCompile Include="TimeStamp.c" />
+    <ClCompile Include="User.c" />
+    <ClCompile Include="UserMsgHistory.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Forum.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="PrivateMsgBox.h" />
+    <ClInclude Include="Subject.h" />
+    <ClInclude Include="Thread.h" />
+    <ClInclude Include="TimeStamp.h" />
+    <ClInclude Include="User.h" />
+    <ClInclude Include="UserMsgHistory.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -126,9 +146,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <None Include="C:\Users\glate\Desktop\README.md" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

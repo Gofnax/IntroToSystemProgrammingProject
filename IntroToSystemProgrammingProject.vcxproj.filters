@@ -15,8 +15,55 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\Users\glate\Desktop\README.md">
-      <Filter>Resource Files</Filter>
-    </None>
+    <ClCompile Include="Forum.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="User.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UserMsgHistory.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Subject.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PrivateMsgBox.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Message.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeStamp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Forum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="User.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserMsgHistory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Subject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PrivateMsgBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeStamp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
