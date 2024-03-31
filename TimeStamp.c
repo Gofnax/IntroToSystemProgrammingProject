@@ -2,5 +2,5 @@
 
 char* getTimeString(TimeStamp* pTime)
 {
-
+	printf("Mey\n");
 }
