@@ -3,6 +3,7 @@
 
 int main(void)
 {
-	TimeStamp time = { .day = 1, .month = 1, .year = 1111, .hour = 11, .minute = 69 };
-	(void)getTimeString(&time);
+	TimeStamp time;// = { .day = 4, .month = 11, .year = 1998, .hour = 23, .minute = 7 };
+	(void)initTime(&time);
+	printf("%s\n", getTimeString(&time));
 }

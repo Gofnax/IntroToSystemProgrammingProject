@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdlib.h>
+#include <time.h>
 #include <stdio.h>
 
 typedef struct
@@ -11,4 +13,5 @@ typedef struct
 	int minute;
 }TimeStamp;
 
+int initTime(TimeStamp* pTime);
 char* getTimeString(TimeStamp* pTime);

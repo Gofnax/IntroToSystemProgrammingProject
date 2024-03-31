@@ -1,11 +1,3 @@
-﻿  Forum.c
-  Message.c
-  PrivateMsgBox.c
-  Subject.c
-  Thread.c
-  TimeStamp.c
-  User.c
-  UserMsgHistory.c
-  Generating Code...
-F:\Afeka\System Programming\IntroToSystemProgrammingProject\TimeStamp.c(6): warning C4716: 'getTimeString': must return a value
+﻿  TimeStamp.c
+F:\Afeka\System Programming\IntroToSystemProgrammingProject\TimeStamp.c(39,12): warning C4013: 'strlen' undefined; assuming extern returning int
   IntroToSystemProgrammingProject.vcxproj -> F:\Afeka\System Programming\IntroToSystemProgrammingProject\x64\Debug\IntroToSystemProgrammingProject.exe
