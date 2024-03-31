@@ -51,8 +51,8 @@ int	initTime(TimeStamp* pTime)
 	time_t currTimeTmp = time(&currTimeTmp);
 	struct tm* currTime = localtime(&currTimeTmp);
 	pTime->day = currTime->tm_mday;
-	pTime->month = currTime->tm_mon + 1;
-	pTime->year = currTime->tm_year + 1900;
+	pTime->month = currTime->tm_mon + 1;	//tm_mon is between 0 and 11
+	pTime->year = currTime->tm_year + 1900;	//tm_year counts years since 1900
 	pTime->hour = currTime->tm_hour;
 	pTime->minute = currTime->tm_min;
 	return 1;
