@@ -36,7 +36,7 @@ char* getTimeString(TimeStamp* pTime)
 	{
 		snprintf(minute, 3, "%d", pTime->minute);
 	}
-	int len = strlen(day) + strlen(month) + strlen(year) + strlen(hour) + strlen(minute) + strlen("// :");
+	int len = (int)(strlen(day) + strlen(month) + strlen(year) + strlen(hour) + strlen(minute) + strlen("// :"));
 	char* timeString = (char*)calloc(len + 1, sizeof(char));
 	if (timeString == NULL)
 	{

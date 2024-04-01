@@ -1,13 +1,17 @@
 #include "Forum.h"
 #include "TimeStamp.h"
+#include "Message.h"
+#include "User.h"
 
 int main(void)
 {
 	TimeStamp time;// = { .day = 4, .month = 11, .year = 1998, .hour = 23, .minute = 7 };
-	(void)initTime(&time);
+	initTime(&time);
 	printf("%s\n", getTimeString(&time));
-	LIST testList;
-	L_init(&testList);
-	L_insert(&testList.head, 3);
 
+	Message msg;
+	User user;
+	initUser(&user);
+	createMsg(&msg, user.name);
+	printMsg(&msg);
 }

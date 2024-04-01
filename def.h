@@ -9,6 +9,13 @@
 // a value not supposed in stack and queue
 #define		EMPTY	0x7FFFFFFF
 
+// the maximum number of characters allowed in a message
+#define MAX_MSG_LEN 255
+
+// the maximum number of characters allowed in a password
+#define USERNAME_LEN 17
+#define PW_LEN 9
+
 // new types
 typedef void* DATA;					// a type for data (easy to change)
 typedef enum {False, True} BOOL;	// a boolean type
