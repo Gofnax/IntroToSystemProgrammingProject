@@ -12,7 +12,7 @@ int initUser(User* pUser)
 	if (strlen(pUser->name) >= USERNAME_LEN - 1)
 	{
 		*(pUser->name + USERNAME_LEN - 1) = '\0';
-		(void)gets(buffer);	// buffer cleaning
+		gets(buffer);	// buffer cleaning
 	}
 	cleanNewlineChar(pUser->name);
 
@@ -21,16 +21,14 @@ int initUser(User* pUser)
 	if (strlen(pUser->password) >= PW_LEN - 1)
 	{
 		*(pUser->password + PW_LEN - 1) = '\0';
-		(void)gets(buffer);	// buffer cleaning
+		gets(buffer);	// buffer cleaning
 	}
 	cleanNewlineChar(pUser->password);
 
-	printf("User registered successfully.\n");
-}
+	initMsgHistory(&pUser->msgHistory);
 
-char* getUserName(User* pUser)
-{
-	return pUser->name;
+	printf("User registered successfully.\n");
+	return 1;
 }
 
 void freeUserContents(User* pUser)

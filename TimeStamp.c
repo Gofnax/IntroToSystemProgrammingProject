@@ -1,6 +1,6 @@
 #include "TimeStamp.h"
 
-char* getTimeString(TimeStamp* pTime)
+char* getTimeString(const TimeStamp* pTime)
 {
 	char day[3] = { 0 }, month[3] = { 0 }, year[5] = { 0 }, hour[3] = { 0 }, minute[3] = { 0 };
 	if (pTime->day <= 9)
@@ -56,4 +56,19 @@ int	initTime(TimeStamp* pTime)
 	pTime->hour = currTime->tm_hour;
 	pTime->minute = currTime->tm_min;
 	return 1;
+}
+
+int compareTime(const TimeStamp* pTime1, const TimeStamp* pTime2)
+{
+	if (pTime1->year != pTime2->year)
+		return pTime1->year - pTime2->year;
+	if (pTime1->month != pTime2->month)
+		return pTime1->month - pTime2->month;
+	if (pTime1->day != pTime2->day)
+		return pTime1->day - pTime2->day;
+	if (pTime1->hour != pTime2->hour)
+		return pTime1->hour - pTime2->hour;
+	if (pTime1->minute != pTime2->minute)
+		return pTime1->minute - pTime2->minute;
+	return 0;
 }

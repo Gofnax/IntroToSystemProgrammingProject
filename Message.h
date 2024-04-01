@@ -9,10 +9,10 @@ typedef struct
 {
 	char msgText[MAX_MSG_LEN];
 	char* authorName;
+	int likesCounter;
 	TimeStamp timeWritten;
 }Message;
 
 int createMsg(Message* pMsg, char* authorName);
-void printMsg(Message* pMsg);
-char* getMsgText(Message* pMsg);
+void printMsg(const Message* pMsg);
 void freeMessageContents(Message* pMsg);

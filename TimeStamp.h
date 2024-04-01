@@ -15,4 +15,5 @@ typedef struct
 }TimeStamp;
 
 int initTime(TimeStamp* pTime);
-char* getTimeString(TimeStamp* pTime);
+char* getTimeString(const TimeStamp* pTime);
+int compareTime(const TimeStamp* pTime1, const TimeStamp* pTime2);
