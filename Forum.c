@@ -8,5 +8,6 @@ int main(void)
 	printf("test\n");
 	printf("dlvtlm\n");
 	printf("Mey\n");
+	printf("Muy\n");
 	printf("%s\n", getTimeString(&time));
 }
