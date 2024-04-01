@@ -7,5 +7,6 @@ int main(void)
 	(void)initTime(&time);
 	printf("test\n");
 	printf("dlvtlm\n");
+	printf("Mey\n");
 	printf("%s\n", getTimeString(&time));
 }
