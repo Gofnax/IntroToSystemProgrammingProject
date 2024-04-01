@@ -1,3 +1,11 @@
-﻿  TimeStamp.c
+﻿  Forum.c
+  Message.c
+  PrivateMsgBox.c
+  Subject.c
+  Thread.c
+  TimeStamp.c
 F:\Afeka\System Programming\IntroToSystemProgrammingProject\TimeStamp.c(39,12): warning C4013: 'strlen' undefined; assuming extern returning int
+  User.c
+  UserMsgHistory.c
+  Generating Code...
   IntroToSystemProgrammingProject.vcxproj -> F:\Afeka\System Programming\IntroToSystemProgrammingProject\x64\Debug\IntroToSystemProgrammingProject.exe
