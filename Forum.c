@@ -5,9 +5,9 @@ int main(void)
 {
 	TimeStamp time;// = { .day = 4, .month = 11, .year = 1998, .hour = 23, .minute = 7 };
 	(void)initTime(&time);
-	printf("test\n");
-	printf("dlvtlm\n");
-	printf("Mey\n");
-	printf("Muy\n");
 	printf("%s\n", getTimeString(&time));
+	LIST testList;
+	L_init(&testList);
+	L_insert(&testList.head, 3);
+
 }
