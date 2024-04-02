@@ -24,11 +24,17 @@ int main(void)
 	initUser(&user2);
 	PrivateMsgBox privateBox;
 	initPrivateMsgBox(&privateBox, &user1, &user2);
-	printf("Write a message as %s\n", user1.name);
+	privateMsgBoxMenu(&privateBox, &user1);
+	privateMsgBoxMenu(&privateBox, &user2);
+	privateMsgBoxMenu(&privateBox, &user1);
+	/*printf("Write a message as %s\n", user1.name);
 	writeMessage(&privateBox, &user1);
 	printf("Write a message as %s\n", user2.name);
 	writeMessage(&privateBox, &user2);
-	printPrivateMsgs(&privateBox);
+	printPrivateMsgs(&privateBox);*/
 
 	freePrivateMsgBoxContents(&privateBox);
+	freeUserContents(&user1);
+	freeUserContents(&user2);
+
 }

@@ -13,6 +13,35 @@ int initPrivateMsgBox(PrivateMsgBox* pPrivateBox, User* pUser1, User* pUser2)
 	return 1;
 }
 
+void privateMsgBoxMenu(PrivateMsgBox* pPrivateBox, User* pUser)
+{
+	if (pPrivateBox == NULL)
+		return;
+	int userChoice;
+	char buff[2] = { 0 };
+	do
+	{
+		printf("Choose action: (1 - Display Messages | 2 - Write a Message | 0 - Exit Private Messages\n");
+		(void)scanf("%d", &userChoice);
+		(void)gets(buff);	// buffer cleaning
+		switch (userChoice)
+		{
+			case 1:
+				printPrivateMsgs(pPrivateBox);
+				break;
+			case 2:
+				writeMessage(pPrivateBox, pUser);
+				break;
+			case 0:
+				printf("Returning to main menu.\n");
+				break;
+			default:
+				printf("Unknown option selected.\n");
+				break;
+		}
+	} while (userChoice != 0);
+}
+
 int writeMessage(PrivateMsgBox* pPrivateBox, User* pUser)
 {
 	if (pPrivateBox == NULL || pUser == NULL)
