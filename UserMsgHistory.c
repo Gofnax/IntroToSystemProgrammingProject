@@ -19,9 +19,10 @@ int documentMsg(UserMsgHistory* pHistory, Message* pMsg)
 		return -1;
 	if (pHistory->numOfMsgs == pHistory->maxNumOfMsgs)
 	{
-		pHistory->msgHistory = (Message**)realloc(pHistory->msgHistory, (pHistory->numOfMsgs + HISTORY_GROWTH_SIZE) * sizeof(Message*));
-		if (pHistory->msgHistory == NULL)
+		Message** tmpArr = (Message**)realloc(pHistory->msgHistory, (pHistory->numOfMsgs + HISTORY_GROWTH_SIZE) * sizeof(Message*));
+		if (tmpArr == NULL)
 			return -1;
+		pHistory->msgHistory = tmpArr;
 		pHistory->maxNumOfMsgs *= 2;
 	}
 	pHistory->msgHistory[pHistory->numOfMsgs] = pMsg;
