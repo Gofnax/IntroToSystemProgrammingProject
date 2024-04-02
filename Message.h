@@ -17,3 +17,4 @@ typedef struct
 int createMsg(Message* pMsg, char* authorName);
 void printMsg(const Message* pMsg);
 void freeMessageContents(Message* pMsg);
+void freeMessage(Message* pMsg);

@@ -34,5 +34,13 @@ void printMsg(const Message* pMsg)
 
 void freeMessageContents(Message* pMsg)
 {
+	if (pMsg == NULL)
+		return;
 	free(pMsg->authorName);
+}
+
+void freeMessage(Message* pMsg)
+{
+	freeMessageContents(pMsg);
+	free(pMsg);
 }

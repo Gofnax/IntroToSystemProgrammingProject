@@ -17,3 +17,4 @@ typedef struct
 int initUser(User* pUser);
 int isSamePassword(User* pUser, char* pass);
 void freeUserContents(User* pUser);
+void freeUser(User* pUser);

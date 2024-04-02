@@ -28,4 +28,4 @@ void sortMsgs(UserMsgHistory* pHistory);
 void sortMessageHistory(UserMsgHistory* pHistory, int (*compare)(const void*, const void*));
 Message* searchForMessage(const UserMsgHistory* pHistory, Message** pMsg);
 void freeMsgHistoryContents(UserMsgHistory* pHistory);
-
+void freeMsgHistory(UserMsgHistory* pHistory);

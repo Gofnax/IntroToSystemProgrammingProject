@@ -48,3 +48,9 @@ void freePrivateMsgBoxContents(PrivateMsgBox* pPrivateBox)
 		free(&pPrivateBox->messageArr[i]);
 	}
 }
+
+void freePrivateMsgBox(PrivateMsgBox* pPrivateBox)
+{
+	freePrivateMsgBoxContents(pPrivateBox);
+	free(pPrivateBox);
+}
