@@ -124,7 +124,7 @@ Message* searchForMessage(const UserMsgHistory* pHistory, Message** pMsg)
 	return NULL;
 }
 
-void freeMsgHistory(UserMsgHistory* pHistory)
+void freeMsgHistoryContents(UserMsgHistory* pHistory)
 {
-	free(pHistory->msgHistory);
+	free(pHistory->msgHistory);	// the messages themselves aren't stored in UserMsgHistory, but in their threads
 }

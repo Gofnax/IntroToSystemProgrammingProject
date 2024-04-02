@@ -40,6 +40,8 @@ int isSamePassword(User* pUser, char* pass)
 void freeUserContents(User* pUser)
 {
 	free(pUser->name);
+	freeMsgHistoryContents(&pUser->msgHistory);
+	free(&pUser->msgHistory);
 }
 
 

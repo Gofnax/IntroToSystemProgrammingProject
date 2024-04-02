@@ -26,6 +26,6 @@ int	compareByLikes(const void* v1, const void* v2);
 int compareByLength(const void* v1, const void* v2);
 void sortMsgs(UserMsgHistory* pHistory);
 void sortMessageHistory(UserMsgHistory* pHistory, int (*compare)(const void*, const void*));
-void freeMsgHistory(UserMsgHistory* pHistory);
 Message* searchForMessage(const UserMsgHistory* pHistory, Message** pMsg);
+void freeMsgHistoryContents(UserMsgHistory* pHistory);
 

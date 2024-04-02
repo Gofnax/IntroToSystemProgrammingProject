@@ -13,3 +13,5 @@ typedef struct
 
 int initPrivateMsgBox(PrivateMsgBox* pPrivateBox, User* pUser1, User* pUser2);
 int writeMessage(PrivateMsgBox* pPrivateBox, User* pUser);
+void printPrivateMsgs(PrivateMsgBox* pPrivateBox);
+void freePrivateMsgBoxContents(PrivateMsgBox* pPrivateBox);

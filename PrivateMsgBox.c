@@ -27,3 +27,24 @@ int writeMessage(PrivateMsgBox* pPrivateBox, User* pUser)
 	pPrivateBox->numOfMsgs++;
 	return 1;
 }
+
+void printPrivateMsgs(PrivateMsgBox* pPrivateBox)
+{
+	if (pPrivateBox == NULL)
+		return;
+	for (int i = 0; i < pPrivateBox->numOfMsgs; i++)
+	{
+		printMsg(&pPrivateBox->messageArr[i]);
+	}
+}
+
+void freePrivateMsgBoxContents(PrivateMsgBox* pPrivateBox)
+{
+	if (pPrivateBox == NULL)
+		return;
+	for (int i = 0; i < pPrivateBox->numOfMsgs; i++)
+	{
+		freeMessageContents(&pPrivateBox->messageArr[i]);
+		free(&pPrivateBox->messageArr[i]);
+	}
+}
