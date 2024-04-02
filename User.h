@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "def.h"
+#include "General.h"
 #include "UserMsgHistory.h"
 
 typedef struct
@@ -14,5 +15,5 @@ typedef struct
 }User;
 
 int initUser(User* pUser);
+int isSamePassword(User* pUser, char* pass);
 void freeUserContents(User* pUser);
-void cleanNewlineChar(char* str);

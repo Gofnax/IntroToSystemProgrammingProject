@@ -2,6 +2,7 @@
 
 int createMsg(Message* pMsg, char* authorName)
 {
+	char buffer[10] = { 0 };
 	pMsg->likesCounter = 0;
 	int len = (int)strlen(authorName) + 1;
 	pMsg->authorName = (char*)malloc(len * sizeof(char));
@@ -9,9 +10,15 @@ int createMsg(Message* pMsg, char* authorName)
 		return -1;
 	strncpy(pMsg->authorName, authorName, len);
 
+	pMsg->msgText[MAX_MSG_LEN - 1] = '\0';
 	printf("Enter your message: (max %d chars)\n", MAX_MSG_LEN);
 	fgets(pMsg->msgText, MAX_MSG_LEN, stdin);
-
+	if (pMsg->msgText[MAX_MSG_LEN - 1] != '\0')
+	{
+		pMsg->msgText[MAX_MSG_LEN - 1] = '\0';
+		gets(buffer);	// buffer cleaning
+	}
+	cleanNewlineChar(pMsg->msgText);
 	initTime(&pMsg->timeWritten);
 	return 1;
 }

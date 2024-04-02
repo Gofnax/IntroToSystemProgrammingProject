@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "def.h"
+#include "General.h"
 #include "TimeStamp.h"
 
 typedef struct

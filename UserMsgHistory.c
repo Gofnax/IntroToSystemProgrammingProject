@@ -1,7 +1,7 @@
 #include "UserMsgHistory.h"
 
 static const char* SortTypeStr[eNofSorts]
-		= { "Not Sorted", "Sorted by Time of Writing", "Sorted by Number of Likes" };
+		= { "Not Sorted", "Sorted by Time of Writing", "Sorted by Number of Likes", "Sorted by Length of Text"};
 
 void initMsgHistory(UserMsgHistory* pHistory)
 {
@@ -55,6 +55,13 @@ int	compareByLikes(const void* v1, const void* v2)
 	return pMsg1->likesCounter - pMsg2->likesCounter;
 }
 
+int compareByLength(const void* v1, const void* v2)
+{
+	const Message* pMsg1 = *(const Message**)v1;
+	const Message* pMsg2 = *(const Message**)v2;
+	return strlen(pMsg1->msgText) - strlen(pMsg2->msgText);
+}
+
 void sortMsgs(UserMsgHistory* pHistory)
 {
 	if (pHistory == NULL)
@@ -77,6 +84,9 @@ void sortMsgs(UserMsgHistory* pHistory)
 			break;
 		case eSortByLikes:
 			sortMessageHistory(pHistory, compareByLikes);
+			break;
+		case eSortByLength:
+			sortMessageHistory(pHistory, compareByLength);
 			break;
 	}
 	pHistory->currentSort = (eSortType)userChoice;
@@ -104,10 +114,10 @@ Message* searchForMessage(const UserMsgHistory* pHistory, Message** pMsg)
 			return *(Message**)bsearch(pMsg, pHistory->msgHistory, pHistory->numOfMsgs,
 				sizeof(Message*), compareByLikes);
 			break;
-		/*case 3:
+		case 3:
 			return *(Message**)bsearch(pMsg, pHistory->msgHistory, pHistory->numOfMsgs,
-				sizeof(Message*), compareByDate);
-			break;*/
+				sizeof(Message*), compareByLength);
+			break;
 		default:
 			printf("The search cannot be performed, array not sorted\n");
 	}
