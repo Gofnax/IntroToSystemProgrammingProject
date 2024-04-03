@@ -32,6 +32,63 @@ void printMsg(const Message* pMsg)
 	printf("----------------------------------------\n");	// 40 '-' for visuals
 }
 
+int saveMsgToBFile(FILE* fp, Message* pMsg)
+{
+	if (fp == NULL || pMsg == NULL)
+		return -1;
+	int authorLen = (int)strlen(pMsg->authorName) + 1;
+	if (fwrite(&authorLen, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (fwrite(pMsg->authorName, sizeof(char), authorLen, fp) != authorLen)
+		return -1;
+
+	int msgLen = (int)strlen(pMsg->msgText) + 1;
+	if (fwrite(&msgLen, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (fwrite(pMsg->msgText, sizeof(char), msgLen, fp) != msgLen)
+		return -1;
+
+	if (fwrite(&pMsg->likesCounter, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (saveTimeToBFileCompressed(fp, &pMsg->timeWritten) == -1)
+		return -1;
+	return 1;
+}
+
+int readMsgFromBFile(FILE* fp, Message* pMsg)
+{
+	if (fp == NULL || pMsg == NULL)
+		return -1;
+
+	int authorLen = 0;
+	if (fread(&authorLen, sizeof(int), 1, fp) != 1)
+		return -1;
+	pMsg->authorName = (char*)malloc(authorLen * sizeof(char));
+	if (pMsg->authorName == NULL)
+		return -1;
+	if (fread(pMsg->authorName, sizeof(char), authorLen, fp) != authorLen)
+		return -1;
+
+	int msgLen = 0;
+	if (fread(&msgLen, sizeof(int), 1, fp) != 1)
+		return -1;
+	char* tmpText = (char*)malloc(msgLen * sizeof(char));
+	if (tmpText == NULL)
+		return -1;
+	if (fread(tmpText, sizeof(char), msgLen, fp) != msgLen)
+		return -1;
+	strncpy(pMsg->msgText, tmpText, msgLen);
+	free(tmpText);
+
+	if (fread(&pMsg->likesCounter, sizeof(int), 1, fp) != 1)
+		return -1;
+
+	if (readTimeFromBFileCompressed(fp, &pMsg->timeWritten) == -1)
+		return -1;
+
+	return 1;
+}
+
 void freeMessageContents(Message* pMsg)
 {
 	if (pMsg == NULL)

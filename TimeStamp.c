@@ -3,39 +3,11 @@
 char* getTimeString(const TimeStamp* pTime)
 {
 	char day[3] = { 0 }, month[3] = { 0 }, year[5] = { 0 }, hour[3] = { 0 }, minute[3] = { 0 };
-	if (pTime->day <= 9)
-	{
-		snprintf(day, 3, "0%d", pTime->day);
-	}
-	else
-	{
-		snprintf(day, 3, "%d", pTime->day);
-	}
-	if (pTime->month <= 9)
-	{
-		snprintf(month, 3, "0%d", pTime->month);
-	}
-	else
-	{
-		snprintf(month, 3, "%d", pTime->month);
-	}
+	formatTimeElement(day, 3, pTime->day);
+	formatTimeElement(month, 3, pTime->month);
 	snprintf(year, 5, "%d", pTime->year);
-	if (pTime->hour <= 9)
-	{
-		snprintf(hour, 3, "0%d", pTime->hour);
-	}
-	else
-	{
-		snprintf(hour, 3, "%d", pTime->hour);
-	}
-	if (pTime->minute <= 9)
-	{
-		snprintf(minute, 3, "0%d", pTime->minute);
-	}
-	else
-	{
-		snprintf(minute, 3, "%d", pTime->minute);
-	}
+	formatTimeElement(hour, 3, pTime->hour);
+	formatTimeElement(minute, 3, pTime->minute);
 	int len = (int)(strlen(day) + strlen(month) + strlen(year) + strlen(hour) + strlen(minute) + strlen("// :"));
 	char* timeString = (char*)calloc(len + 1, sizeof(char));
 	if (timeString == NULL)
@@ -44,6 +16,18 @@ char* getTimeString(const TimeStamp* pTime)
 	}
 	snprintf(timeString, len + 1, "%s/%s/%s %s:%s", day, month, year, hour, minute);
 	return timeString;
+}
+
+void formatTimeElement(char* charElement, int len, int numElement)
+{
+	if (numElement <= 9)
+	{
+		snprintf(charElement, len, "0%d", numElement);
+	}
+	else
+	{
+		snprintf(charElement, 3, "%d", numElement);
+	}
 }
 
 int	initTime(TimeStamp* pTime)
@@ -71,4 +55,41 @@ int compareTime(const TimeStamp* pTime1, const TimeStamp* pTime2)
 	if (pTime1->minute != pTime2->minute)
 		return pTime1->minute - pTime2->minute;
 	return 0;
+}
+
+int saveTimeToBFileCompressed(FILE* fp, const TimeStamp* pTime)
+{
+	if (fp == NULL || pTime == NULL)
+		return -1;
+	BYTE data[3] = { 0 };
+	data[0] = (pTime->month << 5) | pTime->day;
+	data[1] = (pTime->hour << 5) | ((pTime->year - 2020) << 1) | (pTime->month >> 3);
+	data[2] = (pTime->minute << 2) | (pTime->hour >> 3);
+
+	if (fwrite(data, sizeof(BYTE), 3, fp) != 3)
+		return -1;
+
+	return 1;
+}
+
+int readTimeFromBFileCompressed(FILE* fp, TimeStamp* pTime)
+{
+	if (fp == NULL || pTime == NULL)
+		return -1;
+
+	BYTE data[3] = { 0 };
+	if (fread(data, sizeof(BYTE), 3, fp) != 3)
+		return -1;
+
+	int mask = 0x1F;
+	pTime->day = data[0] & mask;
+	mask = 1;
+	pTime->month = ((data[1] & mask) << 3) | (data[0] >> 5);
+	mask = 0xF;
+	pTime->year = 2020 + ((data[1] >> 1) & mask);
+	mask = 3;
+	pTime->hour = ((data[2] & mask) << 3) | (data[1] >> 5);
+	pTime->minute = data[2] >> 2;
+
+	return 1;
 }

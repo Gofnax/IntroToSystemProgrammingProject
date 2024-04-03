@@ -16,5 +16,7 @@ typedef struct
 
 int createMsg(Message* pMsg, char* authorName);
 void printMsg(const Message* pMsg);
+int saveMsgToBFile(FILE* fp, Message* pMsg);
+int readMsgFromBFile(FILE* fp, Message* pMsg);
 void freeMessageContents(Message* pMsg);
 void freeMessage(Message* pMsg);

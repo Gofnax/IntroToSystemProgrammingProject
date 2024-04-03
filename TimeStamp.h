@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdio.h>
 
+typedef unsigned char BYTE;
+
 typedef struct
 {
 	int day;
@@ -16,4 +18,7 @@ typedef struct
 
 int initTime(TimeStamp* pTime);
 char* getTimeString(const TimeStamp* pTime);
+void formatTimeElement(char* charElement, int len, int numElement);
 int compareTime(const TimeStamp* pTime1, const TimeStamp* pTime2);
+int saveTimeToBFileCompressed(FILE* fp, const TimeStamp* pTime);
+int readTimeFromBFileCompressed(FILE* fp, TimeStamp* pTime);
