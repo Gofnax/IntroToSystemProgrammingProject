@@ -6,11 +6,11 @@ int main(void)
 	initTime(&time);
 	printf("%s\n", getTimeString(&time));
 
-	//testPrivateMsgBox();
+	testPrivateMsgBox();
 
 	//testTimeStampBinaryFile();
 
-	testMessageBinaryFile();
+	//testMessageBinaryFile();
 }
 
 void testPrivateMsgBox()

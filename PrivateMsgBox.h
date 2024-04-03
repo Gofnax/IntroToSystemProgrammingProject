@@ -6,6 +6,8 @@
 
 typedef struct
 {
+	char* userName1;
+	char* userName2;
 	User* user1;
 	User* user2;
 	Message* messageArr;

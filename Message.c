@@ -32,7 +32,7 @@ void printMsg(const Message* pMsg)
 	printf("----------------------------------------\n");	// 40 '-' for visuals
 }
 
-int saveMsgToBFile(FILE* fp, Message* pMsg)
+int saveMsgToBFile(const FILE* fp, const Message* pMsg)
 {
 	if (fp == NULL || pMsg == NULL)
 		return -1;
@@ -55,7 +55,7 @@ int saveMsgToBFile(FILE* fp, Message* pMsg)
 	return 1;
 }
 
-int readMsgFromBFile(FILE* fp, Message* pMsg)
+int readMsgFromBFile(const FILE* fp, Message* pMsg)
 {
 	if (fp == NULL || pMsg == NULL)
 		return -1;

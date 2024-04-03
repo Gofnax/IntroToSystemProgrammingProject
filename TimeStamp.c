@@ -57,7 +57,7 @@ int compareTime(const TimeStamp* pTime1, const TimeStamp* pTime2)
 	return 0;
 }
 
-int saveTimeToBFileCompressed(FILE* fp, const TimeStamp* pTime)
+int saveTimeToBFileCompressed(const FILE* fp, const TimeStamp* pTime)
 {
 	if (fp == NULL || pTime == NULL)
 		return -1;
@@ -72,7 +72,7 @@ int saveTimeToBFileCompressed(FILE* fp, const TimeStamp* pTime)
 	return 1;
 }
 
-int readTimeFromBFileCompressed(FILE* fp, TimeStamp* pTime)
+int readTimeFromBFileCompressed(const FILE* fp, TimeStamp* pTime)
 {
 	if (fp == NULL || pTime == NULL)
 		return -1;

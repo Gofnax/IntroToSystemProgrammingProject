@@ -5,8 +5,17 @@ int initPrivateMsgBox(PrivateMsgBox* pPrivateBox, User* pUser1, User* pUser2)
 	if (pPrivateBox == NULL || pUser1 == NULL || pUser2 == NULL)
 		return -1;
 	pPrivateBox->user1 = pUser1;
+	int len = (int)strlen(pUser1->name) + 1;
+	pPrivateBox->userName1 = (char*)malloc(len * sizeof(char));
+	if (pPrivateBox->userName1 == NULL)
+		return -1;
+	strncpy(pPrivateBox->userName1, pUser1->name, len);
 	pPrivateBox->user2 = pUser2;
-	pPrivateBox->numOfMsgs = 0;
+	len = (int)strlen(pUser2->name) + 1;
+	pPrivateBox->userName2 = (char*)malloc(len * sizeof(char));
+	if (pPrivateBox->userName2 == NULL)
+		return -1;
+	strncpy(pPrivateBox->userName2, pUser2->name, len);	pPrivateBox->numOfMsgs = 0;
 	pPrivateBox->messageArr = (Message*)malloc(1 * sizeof(Message));
 	if (pPrivateBox->messageArr == NULL)
 		return -1;
