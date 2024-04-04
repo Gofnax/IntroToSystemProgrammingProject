@@ -16,6 +16,9 @@
 #define USERNAME_LEN 17
 #define PW_LEN 9
 
+// the maximum number of characters allowed in a title
+#define MAX_TITLE_NAME 41
+
 // Macro defenition
 #define NULL_CHECK(ptr, num) {\
 				if(ptr == NULL)\

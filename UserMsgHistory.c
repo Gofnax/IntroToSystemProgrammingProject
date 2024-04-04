@@ -59,7 +59,7 @@ int compareByLength(const void* v1, const void* v2)
 {
 	const Message* pMsg1 = *(const Message**)v1;
 	const Message* pMsg2 = *(const Message**)v2;
-	return strlen(pMsg1->msgText) - strlen(pMsg2->msgText);
+	return (int)(strlen(pMsg1->msgText) - strlen(pMsg2->msgText));
 }
 
 void sortMsgs(UserMsgHistory* pHistory)
@@ -124,7 +124,7 @@ Message* searchForMessage(const UserMsgHistory* pHistory, Message** pMsg)
 	return NULL;
 }
 
-int saveMsgHistoryToBFile(const FILE* fp, const UserMsgHistory* pHistory)
+int saveMsgHistoryToBFile(FILE* fp, const UserMsgHistory* pHistory)
 {
 	if (fp == NULL || pHistory == NULL)
 		return -1;
@@ -135,7 +135,7 @@ int saveMsgHistoryToBFile(const FILE* fp, const UserMsgHistory* pHistory)
 	return 1;
 }
 
-int readMsgHistoryFromBFile(const FILE* fp, UserMsgHistory* pHistory)
+int readMsgHistoryFromBFile(FILE* fp, UserMsgHistory* pHistory)
 {
 	if (fp == NULL || pHistory == NULL)
 		return -1;

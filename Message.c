@@ -32,7 +32,18 @@ void printMsg(const Message* pMsg)
 	printf("----------------------------------------\n");	// 40 '-' for visuals
 }
 
-int saveMsgToBFile(const FILE* fp, const Message* pMsg)
+void printMsgIndexed(const Message* pMsg, int index)
+{
+	printf("----------------------------------------\n");	// 40 '-' for visuals
+	printf("%d) Author: %s\n%s\n", index, pMsg->authorName, getTimeString(&pMsg->timeWritten));
+	printf("--------------------\n");	// 20 '-' for visuals
+	printf("%s\n", pMsg->msgText);
+	printf("--------------------\n");	// 20 '-' for visuals
+	printf("Likes: %d\n", pMsg->likesCounter);
+	printf("----------------------------------------\n");	// 40 '-' for visuals
+}
+
+int saveMsgToBFile(FILE* fp, const Message* pMsg)
 {
 	if (fp == NULL || pMsg == NULL)
 		return -1;
@@ -55,7 +66,7 @@ int saveMsgToBFile(const FILE* fp, const Message* pMsg)
 	return 1;
 }
 
-int readMsgFromBFile(const FILE* fp, Message* pMsg)
+int readMsgFromBFile(FILE* fp, Message* pMsg)
 {
 	if (fp == NULL || pMsg == NULL)
 		return -1;

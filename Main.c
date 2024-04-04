@@ -11,6 +11,7 @@
 
 int main(void);
 void testPrivateMsgBox();
+void testThread();
 void testTimeStampBinaryFile();
 void testMessageBinaryFile();
 void testUserBinaryFile();
@@ -23,12 +24,17 @@ int main(void)
 	printf("%s\n", getTimeString(&time));
 
 	//testPrivateMsgBox();
-
 	//testTimeStampBinaryFile();
-
 	//testMessageBinaryFile();
+	//testUserBinaryFile();
+	testThread();
 
-	testUserBinaryFile();
+	/*Forum forum;
+	initForum(&forum);
+	User user1;
+	initUser(&user1);
+	addUser(&user1, &forum);
+	login(&user1, &forum);*/
 }
 
 void testPrivateMsgBox()
@@ -48,6 +54,21 @@ void testPrivateMsgBox()
 	freePrivateMsgBoxContents(&privateBox);
 	freeUserContents(&user1);
 	freeUserContents(&user2);
+}
+
+void testThread()
+{
+	User user1, user2;
+	printf("Register user 1:\n");
+	initUser(&user1);
+	printf("Register user 2:\n");
+	initUser(&user2);
+	Thread thread1;
+	initThread(&thread1, &user1);
+	addMessage(&thread1, &user2);
+	addMessage(&thread1, &user1);
+	addMessage(&thread1, &user2);
+	printThread(&thread1);
 }
 
 void testTimeStampBinaryFile()

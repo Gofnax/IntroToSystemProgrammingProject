@@ -33,4 +33,8 @@ BOOL L_free(LIST* pList, void (*freeData)(void*));					// free list memory
 
 int L_print(const LIST* pList, void (*printData)(const void*));					// print the list content
 
+int L_size(const LIST* pList);					// return the number of elements in the list
+
+NODE* L_getAt(const LIST* pList, int index);					// return a pointer to the node at the index
+
 #endif

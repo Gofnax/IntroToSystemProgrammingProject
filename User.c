@@ -40,7 +40,7 @@ int isSamePassword(User* pUser, char* pass)
 	return strcmp(pUser->password, pass);
 }
 
-int saveUserToBFile(const FILE* fp, const User* pUser)
+int saveUserToBFile(FILE* fp, const User* pUser)
 {
 	if (fp == NULL || pUser == NULL)
 		return -1;
@@ -56,7 +56,7 @@ int saveUserToBFile(const FILE* fp, const User* pUser)
 	return 1;
 }
 
-int readUserFromBFile(const FILE* fp, User* pUser)
+int readUserFromBFile(FILE* fp, User* pUser)
 {
 	if (fp == NULL || pUser == NULL)
 		return -1;

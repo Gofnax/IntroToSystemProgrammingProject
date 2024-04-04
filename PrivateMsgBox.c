@@ -30,7 +30,7 @@ void privateMsgBoxMenu(PrivateMsgBox* pPrivateBox, User* pUser)
 	char buff[2] = { 0 };
 	do
 	{
-		printf("Choose action: (1 - Display Messages | 2 - Write a Message | 0 - Exit Private Messages\n");
+		printf("Choose action: (1 - Display Messages | 2 - Write a Message | 0 - Exit Private Messages)\n");
 		(void)scanf("%d", &userChoice);
 		(void)gets(buff);	// buffer cleaning
 		switch (userChoice)
@@ -46,7 +46,6 @@ void privateMsgBoxMenu(PrivateMsgBox* pPrivateBox, User* pUser)
 				break;
 			default:
 				printf("Unknown option selected.\n");
-				break;
 		}
 	} while (userChoice != 0);
 }
@@ -76,7 +75,7 @@ void printPrivateMsgs(PrivateMsgBox* pPrivateBox)
 	}
 }
 
-int savePrivateMsgBoxToBFile(const FILE* fp, const PrivateMsgBox* pPrivateBox)
+int savePrivateMsgBoxToBFile(FILE* fp, const PrivateMsgBox* pPrivateBox)
 {
 	if (fp == NULL || pPrivateBox == NULL)
 		return -1;
@@ -100,7 +99,7 @@ int savePrivateMsgBoxToBFile(const FILE* fp, const PrivateMsgBox* pPrivateBox)
 	return 1;
 }
 
-int readPrivateMsgBoxFromBFile(const FILE* fp, PrivateMsgBox* pPrivateBox)
+int readPrivateMsgBoxFromBFile(FILE* fp, PrivateMsgBox* pPrivateBox)
 {
 	if (fp == NULL || pPrivateBox == NULL)
 		return -1;
@@ -110,14 +109,14 @@ int readPrivateMsgBoxFromBFile(const FILE* fp, PrivateMsgBox* pPrivateBox)
 	pPrivateBox->userName1 = (char*)malloc(len * sizeof(char));
 	if (pPrivateBox->userName1 == NULL)
 		return -1;
-	if (fread(pPrivateBox->userName1, sizeof(char), len, fp) != fp)
+	if (fread(pPrivateBox->userName1, sizeof(char), len, fp) != len)
 		return -1;
 	if (fread(&len, sizeof(int), 1, fp) != 1)
 		return -1;
 	pPrivateBox->userName2 = (char*)malloc(len * sizeof(char));
 	if (pPrivateBox->userName2 == NULL)
 		return -1;
-	if (fread(pPrivateBox->userName2, sizeof(char), len, fp) != fp)
+	if (fread(pPrivateBox->userName2, sizeof(char), len, fp) != len)
 		return -1;
 	if (fread(&pPrivateBox->numOfMsgs, sizeof(int), 1, fp) != 1)
 		return -1;

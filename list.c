@@ -148,3 +148,39 @@ int L_print(const LIST* pList, void (*printData)(const void*))
 	printf("\n");
 	return c;
 }
+
+int L_size(const LIST* pList)
+{
+	NODE* tmp;
+	int	count = 0;
+
+	if (!pList)
+		return False;
+
+	tmp = pList->head.next;
+	while (tmp != NULL)
+	{
+		count++;
+		tmp = tmp->next;
+	}
+	return count;
+}
+
+NODE* L_getAt(const LIST* pList, int index)
+{
+	NODE* tmp;
+	int	count = 0;
+
+	if (!pList)
+		return NULL;
+
+	tmp = pList->head.next;
+	while (tmp != NULL)
+	{
+		if (count == index)
+			return tmp;
+		count++;
+		tmp = tmp->next;
+	}
+	return NULL;
+}
