@@ -8,7 +8,3 @@
 #include "Message.h"
 #include "User.h"
 #include "PrivateMsgBox.h"
-
-void testPrivateMsgBox();
-void testTimeStampBinaryFile();
-void testMessageBinaryFile();

@@ -14,15 +14,18 @@ int initUser(User* pUser)
 		pUser->name = getStrExactName(maxCharMsg);
 	} while (strlen(pUser->name) > USERNAME_LEN - 1);
 
-	printf("Enter password: ");
-	char tmpPass[MAX_STR_LEN];
+	char tmpPass1[MAX_STR_LEN];
+	char tmpPass2[MAX_STR_LEN];
 	do
 	{
-		printf("(max %d chars)\n", PW_LEN - 1);
-		fgets(tmpPass, MAX_STR_LEN, stdin);
-		cleanNewlineChar(tmpPass);
-	} while (strlen(tmpPass) > PW_LEN - 1);
-	strncpy(pUser->password, tmpPass, PW_LEN);
+		printf("Enter password: (max %d chars)\n", PW_LEN - 1);
+		fgets(tmpPass1, MAX_STR_LEN, stdin);
+		cleanNewlineChar(tmpPass1);
+		printf("Enter it again for verification:\n");
+		fgets(tmpPass2, MAX_STR_LEN, stdin);
+		cleanNewlineChar(tmpPass2);
+	} while (strlen(tmpPass1) > PW_LEN - 1 || strcmp(tmpPass1, tmpPass2));
+	strncpy(pUser->password, tmpPass1, PW_LEN);
 
 	initMsgHistory(&pUser->msgHistory);
 
@@ -37,12 +40,47 @@ int isSamePassword(User* pUser, char* pass)
 	return strcmp(pUser->password, pass);
 }
 
+int saveUserToBFile(const FILE* fp, const User* pUser)
+{
+	if (fp == NULL || pUser == NULL)
+		return -1;
+	int len = (int)strlen(pUser->name) + 1;
+	if (fwrite(&len, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (fwrite(pUser->name, sizeof(char), len, fp) != len)
+		return -1;
+	if (fwrite(pUser->password, sizeof(char), PW_LEN, fp) != PW_LEN)
+		return -1;
+	if (saveMsgHistoryToBFile(fp, &pUser->msgHistory) == -1)
+		return -1;
+	return 1;
+}
+
+int readUserFromBFile(const FILE* fp, User* pUser)
+{
+	if (fp == NULL || pUser == NULL)
+		return -1;
+	int len = 0;
+	if (fread(&len, sizeof(int), 1, fp) != 1)
+		return -1;
+	pUser->name = (char*)malloc(len * sizeof(char));
+	if (pUser->name == NULL)
+		return -1;
+	if (fread(pUser->name, sizeof(char), len, fp) != len)
+		return -1;
+	if (fread(pUser->password, sizeof(char), PW_LEN, fp) != PW_LEN)
+		return -1;
+	if (readMsgHistoryFromBFile(fp, &pUser->msgHistory) == -1)
+		return -1;
+	return 1;
+}
+
 void freeUserContents(User* pUser)
 {
 	if (pUser == NULL)
 		return;
 	free(pUser->name);
-	freeMsgHistory(&pUser->msgHistory);
+	freeMsgHistoryContents(&pUser->msgHistory);
 }
 
 void freeUser(User* pUser)

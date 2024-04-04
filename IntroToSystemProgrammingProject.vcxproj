@@ -22,6 +22,7 @@
     <ClCompile Include="Forum.c" />
     <ClCompile Include="General.c" />
     <ClCompile Include="list.c" />
+    <ClCompile Include="Main.c" />
     <ClCompile Include="Message.c" />
     <ClCompile Include="PrivateMsgBox.c" />
     <ClCompile Include="Subject.c" />

@@ -16,6 +16,12 @@
 #define USERNAME_LEN 17
 #define PW_LEN 9
 
+// Macro defenition
+#define NULL_CHECK(ptr, num) {\
+				if(ptr == NULL)\
+					return num;\
+			}
+
 // new types
 typedef void* DATA;					// a type for data (easy to change)
 typedef enum {False, True} BOOL;	// a boolean type

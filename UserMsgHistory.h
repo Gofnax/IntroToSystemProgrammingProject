@@ -27,5 +27,7 @@ int compareByLength(const void* v1, const void* v2);
 void sortMsgs(UserMsgHistory* pHistory);
 void sortMessageHistory(UserMsgHistory* pHistory, int (*compare)(const void*, const void*));
 Message* searchForMessage(const UserMsgHistory* pHistory, Message** pMsg);
+int saveMsgHistoryToBFile(const FILE* fp, const UserMsgHistory* pHistory);
+int readMsgHistoryFromBFile(const FILE* fp, UserMsgHistory* pHistory);
 void freeMsgHistoryContents(UserMsgHistory* pHistory);
 void freeMsgHistory(UserMsgHistory* pHistory);

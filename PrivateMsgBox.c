@@ -76,6 +76,61 @@ void printPrivateMsgs(PrivateMsgBox* pPrivateBox)
 	}
 }
 
+int savePrivateMsgBoxToBFile(const FILE* fp, const PrivateMsgBox* pPrivateBox)
+{
+	if (fp == NULL || pPrivateBox == NULL)
+		return -1;
+	int len = (int)strlen(pPrivateBox->userName1) + 1;
+	if (fwrite(&len, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (fwrite(pPrivateBox->userName1, sizeof(char), len, fp) != len)
+		return -1;
+	len = (int)strlen(pPrivateBox->userName2) + 1;
+	if (fwrite(&len, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (fwrite(pPrivateBox->userName2, sizeof(char), len, fp) != len)
+		return -1;
+	if (fwrite(&pPrivateBox->numOfMsgs, sizeof(int), 1, fp) != 1)
+		return -1;
+	for (int i = 0; i < pPrivateBox->numOfMsgs; i++)
+	{
+		if (saveMsgToBFile(fp, &pPrivateBox->messageArr[i]) == -1)
+			return -1;
+	}
+	return 1;
+}
+
+int readPrivateMsgBoxFromBFile(const FILE* fp, PrivateMsgBox* pPrivateBox)
+{
+	if (fp == NULL || pPrivateBox == NULL)
+		return -1;
+	int len = 0;
+	if (fread(&len, sizeof(int), 1, fp) != 1)
+		return -1;
+	pPrivateBox->userName1 = (char*)malloc(len * sizeof(char));
+	if (pPrivateBox->userName1 == NULL)
+		return -1;
+	if (fread(pPrivateBox->userName1, sizeof(char), len, fp) != fp)
+		return -1;
+	if (fread(&len, sizeof(int), 1, fp) != 1)
+		return -1;
+	pPrivateBox->userName2 = (char*)malloc(len * sizeof(char));
+	if (pPrivateBox->userName2 == NULL)
+		return -1;
+	if (fread(pPrivateBox->userName2, sizeof(char), len, fp) != fp)
+		return -1;
+	if (fread(&pPrivateBox->numOfMsgs, sizeof(int), 1, fp) != 1)
+		return -1;
+	for (int i = 0; i < pPrivateBox->numOfMsgs; i++)
+	{
+		if(readMsgFromBFile(fp, &pPrivateBox->messageArr[i]) == -1)
+			return -1;
+	}
+	// I still need to add a call to a function that finds a User by their username
+	// to fill the User fields of the box
+	return 1;
+}
+
 void freePrivateMsgBoxContents(PrivateMsgBox* pPrivateBox)
 {
 	if (pPrivateBox == NULL)
@@ -83,8 +138,9 @@ void freePrivateMsgBoxContents(PrivateMsgBox* pPrivateBox)
 	for (int i = 0; i < pPrivateBox->numOfMsgs; i++)
 	{
 		freeMessageContents(&pPrivateBox->messageArr[i]);
-		free(&pPrivateBox->messageArr[i]);
 	}
+	free(pPrivateBox->userName1);
+	free(pPrivateBox->userName2);
 }
 
 void freePrivateMsgBox(PrivateMsgBox* pPrivateBox)

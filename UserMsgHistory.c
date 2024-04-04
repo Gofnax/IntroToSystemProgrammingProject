@@ -23,7 +23,7 @@ int documentMsg(UserMsgHistory* pHistory, Message* pMsg)
 		if (tmpArr == NULL)
 			return -1;
 		pHistory->msgHistory = tmpArr;
-		pHistory->maxNumOfMsgs *= 2;
+		pHistory->maxNumOfMsgs += HISTORY_GROWTH_SIZE;
 	}
 	pHistory->msgHistory[pHistory->numOfMsgs] = pMsg;
 	pHistory->numOfMsgs++;
@@ -122,6 +122,30 @@ Message* searchForMessage(const UserMsgHistory* pHistory, Message** pMsg)
 			printf("The search cannot be performed, array not sorted\n");
 	}
 	return NULL;
+}
+
+int saveMsgHistoryToBFile(const FILE* fp, const UserMsgHistory* pHistory)
+{
+	if (fp == NULL || pHistory == NULL)
+		return -1;
+	if (fwrite(&pHistory->numOfMsgs, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (fwrite(&pHistory->maxNumOfMsgs, sizeof(int), 1, fp) != 1)
+		return -1;
+	return 1;
+}
+
+int readMsgHistoryFromBFile(const FILE* fp, UserMsgHistory* pHistory)
+{
+	if (fp == NULL || pHistory == NULL)
+		return -1;
+	if (fread(&pHistory->numOfMsgs, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (fread(&pHistory->maxNumOfMsgs, sizeof(int), 1, fp) != 1)
+		return -1;
+	pHistory->msgHistory = (Message**)calloc(pHistory->maxNumOfMsgs, sizeof(Message*));
+	pHistory->currentSort = eNoSort;
+	return 1;
 }
 
 void freeMsgHistoryContents(UserMsgHistory* pHistory)
