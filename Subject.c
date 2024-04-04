@@ -23,7 +23,7 @@ int createSubjectTitle(Subject* pSubject)
 		return -1;
 	char buffer[10] = { 0 };
 	pSubject->title[MAX_TITLE_NAME - 1] = '\0';
-	printf("Enter the subject's title: (max %d chars)\n", MAX_TITLE_NAME - 1);
+	printf("Enter the subject: (max %d chars)\n", MAX_TITLE_NAME - 1);
 	fgets(pSubject->title, MAX_TITLE_NAME, stdin);
 	if (pSubject->title[MAX_TITLE_NAME - 1] != '\0')
 	{
