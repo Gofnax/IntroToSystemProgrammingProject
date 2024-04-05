@@ -29,7 +29,7 @@ int main(void)
 	//testMessageBinaryFile();
 	//testUserBinaryFile();
 	//testThread();
-	testSubject();
+	//testSubject();
 
 	/*Forum forum;
 	initForum(&forum);

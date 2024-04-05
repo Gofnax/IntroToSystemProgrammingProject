@@ -64,6 +64,7 @@ int login(Forum* pForum)
 		return -1;
 	}
 	pForum->currentUser = pTmpUser;
+	// load UserMsgHistory for currentUser
 	printf("Logged in successfully %s\n", pTmpUser->name);
 	return 1;
 }
@@ -91,6 +92,7 @@ int registerUser(Forum* pForum)
 	pForum->userArrSize++;
 	freeUserContents(pTmpUser);
 	free(pTmpUser);
+	return 1;
 }
 
 void displayMsgHistory(User* user)
@@ -108,12 +110,14 @@ void displaySubjectList(LIST* pSubjectList)
 	L_print(pSubjectList, printSubject);
 }
 
-int chooseSubject(LIST* pSubjectList)
+int chooseSubject(LIST* pSubjectList, User* pCurrUser)
 {
 	int choice;
+	char buff[2] = { 0 };
 	printf("Choose a subject:\n");
 	displaySubjectList(pSubjectList);
 	(void)scanf("%d", &choice);
+	(void)gets(buff);	// buffer cleaning
 	if (choice < 1 || choice > L_size(pSubjectList))
 	{
 		printf("Invalid choice\n");
@@ -121,6 +125,7 @@ int chooseSubject(LIST* pSubjectList)
 	}
 	Subject* pSubject = (Subject*)L_getAt(pSubjectList, choice - 1);
 	printSubject(pSubject);
+	subjectActionsMenu(pSubject, pCurrUser);
 	return 1;
 }
 
@@ -165,29 +170,6 @@ int addUser(User* user, Forum* pForum)
 	return 1;
 }
 
-void freeForumContent(Forum* pForum)
-{
-	if (pForum == NULL)
-		return;
-	for (int i = 0; i < pForum->userArrSize; i++)
-	{
-		freeUserContents(&pForum->userArr[i]);
-	}
-	free(pForum->userArr);
-	for (int i = 0; i < pForum->privateMsgBoxArrSize; i++)
-	{
-		freePrivateMsgBoxContents(&pForum->privateMsgBoxArr[i]);
-	}
-	free(pForum->privateMsgBoxArr);
-	L_free(&pForum->subjectList, freeSubjectContent);
-}
-
-void freeForum(Forum* pForum)
-{
-	freeForumContent(pForum);
-	free(pForum);
-}
-
 void startPrivateConversation(User* pCurrentUser, User* pUser, Forum* pForum)
 {
 	if (pCurrentUser == NULL || pUser == NULL || pForum == NULL)
@@ -224,3 +206,101 @@ int doesMsgBoxExist(User* pCurrentUser, User* pUser, PrivateMsgBox* privateMsgBo
 	}
 	return -1;
 }
+
+void forumMainMenu(Forum* pForum)
+{
+	NULL_CHECK(pForum, );
+	loginRegisterMenu(pForum);
+	int userChoice = 0;
+	char buff[2] = { 0 };
+	do
+	{
+		printf("Choose the desired action:\n");
+		printf("1 - View Forum Subjects\n2 - Start a Private Chat\n3 - View Your Message History\n0 - Save and Exit\n");
+		(void)scanf("%d", &userChoice);
+		(void)gets(buff);	// buffer cleaning
+		switch (userChoice)
+		{
+			case 1:
+				chooseSubject(&pForum->subjectList, pForum->currentUser);
+				break;
+			case 2:
+				choosePrivateChatPartner(pForum->currentUser, pForum);
+				break;
+			case 3:
+				//UserMsgHistory menu
+				break;
+
+		}
+	} while (userChoice != 0);
+}
+
+int choosePrivateChatPartner(User* pCurrentUser, Forum* pForum)
+{
+	User* pTmpUser = (User*)malloc(1 * sizeof(User));
+	NULL_CHECK(pTmpUser, -1);
+
+	pTmpUser->name = getStrExactName("Enter the partner's username:\n");
+	int len = (int)strlen(pTmpUser->name) + 1;
+	int partnerIndex = isUserInArr(pTmpUser, pForum->userArr, pForum->userArrSize);
+
+	if (len > USERNAME_LEN || partnerIndex == -1)
+	{
+		printf("No user with such name.\n");
+		return -1;
+	}
+
+	startPrivateConversation(pForum->currentUser, &pForum->userArr[partnerIndex], pForum);
+	return 1;
+}
+
+void loginRegisterMenu(Forum* pForum)
+{
+	NULL_CHECK(pForum, );
+	int userConnected = -1;
+	int userChoice;
+	char buff[2] = { 0 };
+	do
+	{
+		printf("To login enter 1, to register enter 2:\n");
+		(void)scanf("%d", &userChoice);
+		(void)gets(buff);	// buffer cleaning
+		switch (userChoice)
+		{
+			case 1:
+				userConnected = login(pForum);
+				break;
+			case 2:
+				userConnected = registerUser(pForum);
+				printf("Please log in.\n");
+				userConnected = login(pForum);
+				break;
+			default:
+				printf("Unknown option selected.\n");
+		}
+	} while (userConnected != 1 || userChoice < 1 || userChoice > 2);
+}
+
+void freeForumContent(Forum* pForum)
+{
+	if (pForum == NULL)
+		return;
+	for (int i = 0; i < pForum->userArrSize; i++)
+	{
+		freeUserContents(&pForum->userArr[i]);
+	}
+	free(pForum->userArr);
+	for (int i = 0; i < pForum->privateMsgBoxArrSize; i++)
+	{
+		freePrivateMsgBoxContents(&pForum->privateMsgBoxArr[i]);
+	}
+	free(pForum->privateMsgBoxArr);
+	L_free(&pForum->subjectList, freeSubjectContent);
+}
+
+void freeForum(Forum* pForum)
+{
+	freeForumContent(pForum);
+	free(pForum);
+}
+
