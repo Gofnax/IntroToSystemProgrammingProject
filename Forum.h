@@ -34,5 +34,6 @@ int doesMsgBoxExist(User* pCurrentUser, User* pUser, PrivateMsgBox* privateMsgBo
 void forumMainMenu(Forum* pForum);
 int choosePrivateChatPartner(User* pCurrentUser, Forum* pForum);
 void loginRegisterMenu(Forum* pForum);
+void loadMsgHistory(Forum* pForum);
 void freeForumContent(Forum* pForum);
 void freeForum(Forum* pForum);

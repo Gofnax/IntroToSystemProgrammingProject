@@ -39,8 +39,6 @@ int login(Forum* pForum)
 		printf("User not found\n");
 		return -1;
 	}
-	freeUserContents(pTmpUser);	// to free the allocated space for the name we got from the user
-	free(pTmpUser);
 	pTmpUser = &pForum->userArr[userIndex];
 
 	int counter = 0;
@@ -64,8 +62,10 @@ int login(Forum* pForum)
 		return -1;
 	}
 	pForum->currentUser = pTmpUser;
-	// load UserMsgHistory for currentUser
-	printf("Logged in successfully %s\n", pTmpUser->name);
+	freeUserContents(pTmpUser);	// to free the allocated space for the name we got from the user
+	free(pTmpUser);
+	loadMsgHistory(pForum);
+	printf("Logged in successfully as %s\n", pForum->currentUser->name);
 	return 1;
 }
 
@@ -279,6 +279,32 @@ void loginRegisterMenu(Forum* pForum)
 				printf("Unknown option selected.\n");
 		}
 	} while (userConnected != 1 || userChoice < 1 || userChoice > 2);
+}
+
+void loadMsgHistory(Forum* pForum)
+{
+	NULL_CHECK(pForum, );
+	int numOfSubjects = L_size(&pForum->subjectList);
+	NODE* currSubject = &pForum->subjectList.head.next;
+	int numOfMsgs = pForum->currentUser->msgHistory.numOfMsgs;
+	int documentedMsgsCounter = 0;
+	for (int i = 0; (i < numOfSubjects) && (documentedMsgsCounter == numOfMsgs); i++)	// go through all the subjects
+	{
+		for (int j = 0; (j < ((Subject*)currSubject->key)->threadArrSize) && (documentedMsgsCounter == numOfMsgs); j++)	// go through all the threads
+		{
+			Thread* currThread = ((Subject*)currSubject->key)->threadArr[j];
+			for (int k = 0; (k < currThread->messageArrSize) && (documentedMsgsCounter == numOfMsgs); k++)	// go through all the messages
+			{
+				Message* currMsg = &currThread->messageArr[k];
+				if (strcmp(currMsg->authorName, pForum->currentUser->name) == 0)
+				{
+					documentMsg(&pForum->currentUser->msgHistory, currMsg);
+					documentedMsgsCounter++;
+				}
+			}
+		}
+		currSubject = currSubject->next;
+	}
 }
 
 void freeForumContent(Forum* pForum)

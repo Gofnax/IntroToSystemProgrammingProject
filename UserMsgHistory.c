@@ -100,28 +100,42 @@ void sortMessageHistory(UserMsgHistory* pHistory, int (*compare)(const void*, co
 	qsort(pHistory->msgHistory, pHistory->numOfMsgs, sizeof(Message*), compare);
 }
 
-Message* searchForMessage(const UserMsgHistory* pHistory, Message** pMsg)
+Message* searchForMessage(const UserMsgHistory* pHistory)
 {
-	if (pHistory == NULL || pMsg == NULL)
+	if (pHistory == NULL)
 		return NULL;
+	Message tmpMsg;
+	Message* pTmpMsg;
+	Message** res = NULL;
 	switch ((int)pHistory->currentSort)
 	{
 		case 1:
-			return *(Message**)bsearch(pMsg, pHistory->msgHistory, pHistory->numOfMsgs,
+			return *(Message**)bsearch(&pTmpMsg, pHistory->msgHistory, pHistory->numOfMsgs,
 				sizeof(Message*), compareByTime);
 			break;
 		case 2:
-			return *(Message**)bsearch(pMsg, pHistory->msgHistory, pHistory->numOfMsgs,
+			return *(Message**)bsearch(&pTmpMsg, pHistory->msgHistory, pHistory->numOfMsgs,
 				sizeof(Message*), compareByLikes);
 			break;
 		case 3:
-			return *(Message**)bsearch(pMsg, pHistory->msgHistory, pHistory->numOfMsgs,
+			return *(Message**)bsearch(&pTmpMsg, pHistory->msgHistory, pHistory->numOfMsgs,
 				sizeof(Message*), compareByLength);
 			break;
 		default:
 			printf("The search cannot be performed, array not sorted\n");
+			return NULL;
 	}
-	return NULL;
+	
+	if (res == NULL)
+	{
+		printf("Message not found\n");
+		return NULL;
+	}
+	else
+	{
+		print("Message foune:\n");
+		return (*res);
+	}
 }
 
 int saveMsgHistoryToBFile(FILE* fp, const UserMsgHistory* pHistory)
@@ -146,6 +160,30 @@ int readMsgHistoryFromBFile(FILE* fp, UserMsgHistory* pHistory)
 	pHistory->msgHistory = (Message**)calloc(pHistory->maxNumOfMsgs, sizeof(Message*));
 	pHistory->currentSort = eNoSort;
 	return 1;
+}
+
+void msgHistoryActionMenu(UserMsgHistory* pHistory)
+{
+	NULL_CHECK(pHistory, );
+	int userChoice = -1;
+	char buff[2] = { 0 };
+	do
+	{
+		printf("Choose action: (1 - Display Past Messages | 2 - Sort Messages | 3 - Find a Message | 0 - Exit)\n");
+		(void)scanf("%d", &userChoice);
+		(void)gets(buff);	// buffer cleaning
+		switch (userChoice)
+		{
+			case 1:
+				printMsgHistory(pHistory);
+				break;
+			case 2:
+				sortMsgs(pHistory);
+				break;
+			case 3:
+				
+		}
+	} while (userChoice != 0);
 }
 
 void freeMsgHistoryContents(UserMsgHistory* pHistory)
