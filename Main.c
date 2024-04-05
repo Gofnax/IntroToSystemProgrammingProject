@@ -24,6 +24,10 @@ int main(void)
 	initTime(&time);
 	printf("%s\n", getTimeString(&time));
 
+	Forum forum1;
+	initForum(&forum1);
+	forumMainMenu(&forum1);
+
 	//testPrivateMsgBox();
 	//testTimeStampBinaryFile();
 	//testMessageBinaryFile();

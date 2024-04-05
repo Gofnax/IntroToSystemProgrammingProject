@@ -39,6 +39,8 @@ int login(Forum* pForum)
 		printf("User not found\n");
 		return -1;
 	}
+	free(pTmpUser->name);
+	free(pTmpUser);
 	pTmpUser = &pForum->userArr[userIndex];
 
 	int counter = 0;
@@ -61,9 +63,7 @@ int login(Forum* pForum)
 		printf("Too many tries, exiting program\n");
 		return -1;
 	}
-	pForum->currentUser = pTmpUser;
-	freeUserContents(pTmpUser);	// to free the allocated space for the name we got from the user
-	free(pTmpUser);
+	pForum->currentUser = &pForum->userArr[userIndex];
 	loadMsgHistory(pForum);
 	printf("Logged in successfully as %s\n", pForum->currentUser->name);
 	return 1;
@@ -88,9 +88,7 @@ int registerUser(Forum* pForum)
 	} while (isNameTaken != -1);
 
 	initUserPassword(pTmpUser);
-	memcpy(&pForum->userArr[pForum->userArrSize - 1], pTmpUser, sizeof(User));
-	pForum->userArrSize++;
-	freeUserContents(pTmpUser);
+	addUser(pTmpUser, pForum);
 	free(pTmpUser);
 	return 1;
 }
@@ -123,7 +121,7 @@ int chooseSubject(LIST* pSubjectList, User* pCurrUser)
 		printf("Invalid choice\n");
 		return -1;
 	}
-	Subject* pSubject = (Subject*)L_getAt(pSubjectList, choice - 1);
+	Subject* pSubject = (Subject*)(L_getAt(pSubjectList, choice - 1)->key);
 	printSubject(pSubject);
 	subjectActionsMenu(pSubject, pCurrUser);
 	return 1;
@@ -164,7 +162,8 @@ int addUser(User* user, Forum* pForum)
 		return -1;
 	}
 	pForum->userArr = temp;
-	pForum->userArr[pForum->userArrSize - 1] = *user;
+	memcpy(&pForum->userArr[pForum->userArrSize], user, sizeof(User));
+	//pForum->userArr[pForum->userArrSize] = *user;
 	pForum->userArrSize++;
 	printf("User %s added to forum\n", user->name);
 	return 1;
@@ -198,8 +197,8 @@ int doesMsgBoxExist(User* pCurrentUser, User* pUser, PrivateMsgBox* privateMsgBo
 {
 	for (int i = 0; i < privateMsgBoxArrSize; i++)
 	{
-		if ((strcmp(pCurrentUser->name, privateMsgBoxArr[i].user1->name) == 0 && strcmp(pUser->name, privateMsgBoxArr[i].user2->name) == 0) ||
-			(strcmp(pCurrentUser->name, privateMsgBoxArr[i].user2->name) == 0 && strcmp(pUser->name, privateMsgBoxArr[i].user1->name) == 0))
+		if (((strcmp(pCurrentUser->name, privateMsgBoxArr[i].user1->name) == 0 && strcmp(pUser->name, privateMsgBoxArr[i].user2->name) == 0)) ||
+			((strcmp(pCurrentUser->name, privateMsgBoxArr[i].user2->name) == 0 && strcmp(pUser->name, privateMsgBoxArr[i].user1->name) == 0)))
 		{
 			return i;
 		}
@@ -228,9 +227,13 @@ void forumMainMenu(Forum* pForum)
 				choosePrivateChatPartner(pForum->currentUser, pForum);
 				break;
 			case 3:
-				//UserMsgHistory menu
+				msgHistoryActionMenu(&pForum->currentUser->msgHistory);
 				break;
-
+			case 0:
+				// save forum to binaray and text files
+				break;
+			default:
+				printf("Unknown option selected.\n");
 		}
 	} while (userChoice != 0);
 }

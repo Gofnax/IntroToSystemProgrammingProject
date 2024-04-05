@@ -110,15 +110,21 @@ Message* searchForMessage(const UserMsgHistory* pHistory)
 	switch ((int)pHistory->currentSort)
 	{
 		case 1:
-			return *(Message**)bsearch(&pTmpMsg, pHistory->msgHistory, pHistory->numOfMsgs,
+			searchMsgByTimeHelper(&tmpMsg);
+			pTmpMsg = &tmpMsg;
+			res = (Message**)bsearch(&pTmpMsg, pHistory->msgHistory, pHistory->numOfMsgs,
 				sizeof(Message*), compareByTime);
 			break;
 		case 2:
-			return *(Message**)bsearch(&pTmpMsg, pHistory->msgHistory, pHistory->numOfMsgs,
+			searchMsgByLikesHelper(&tmpMsg);
+			pTmpMsg = &tmpMsg;
+			res = (Message**)bsearch(&pTmpMsg, pHistory->msgHistory, pHistory->numOfMsgs,
 				sizeof(Message*), compareByLikes);
 			break;
 		case 3:
-			return *(Message**)bsearch(&pTmpMsg, pHistory->msgHistory, pHistory->numOfMsgs,
+			searchMsgByLengthHelper(&tmpMsg);
+			pTmpMsg = &tmpMsg;
+			res = (Message**)bsearch(&pTmpMsg, pHistory->msgHistory, pHistory->numOfMsgs,
 				sizeof(Message*), compareByLength);
 			break;
 		default:
@@ -133,9 +139,61 @@ Message* searchForMessage(const UserMsgHistory* pHistory)
 	}
 	else
 	{
-		print("Message foune:\n");
+		printf("Message found:\n");
 		return (*res);
 	}
+}
+
+void searchMsgByTimeHelper(Message* pMsg)
+{
+	NULL_CHECK(pMsg, );
+	char buff[2] = { 0 };
+	printf("Enter message year:\n");
+	(void)scanf("%d", &pMsg->timeWritten.year);
+	(void)gets(buff);	// buffer cleaning
+	printf("Enter message month:\n");
+	(void)scanf("%d", &pMsg->timeWritten.month);
+	(void)gets(buff);	// buffer cleaning
+	printf("Enter message day:\n");
+	(void)scanf("%d", &pMsg->timeWritten.day);
+	(void)gets(buff);	// buffer cleaning
+	printf("Enter message hour:\n");
+	(void)scanf("%d", &pMsg->timeWritten.hour);
+	(void)gets(buff);	// buffer cleaning
+	printf("Enter message minute:\n");
+	(void)scanf("%d", &pMsg->timeWritten.minute);
+	(void)gets(buff);	// buffer cleaning
+}
+
+void searchMsgByLikesHelper(Message* pMsg)
+{
+	NULL_CHECK(pMsg, );
+	int likesInput = 0;
+	char buff[2] = { 0 };
+	printf("Enter the number of likes the message has:\n");
+	(void)scanf("%d", &likesInput);
+	(void)gets(buff);	// buffer cleaning
+	pMsg->likesCounter = likesInput;
+}
+
+void searchMsgByLengthHelper(Message* pMsg)
+{
+	NULL_CHECK(pMsg, );
+	int len = 0;
+	char buff[2] = { 0 };
+	printf("Enter the length of the message:\n");
+	(void)scanf("%d", &len);
+	(void)gets(buff);	// buffer cleaning
+	if (len < 1 || len > 254)
+	{
+		printf("No message with such length.\n");
+		return;
+	}
+	for (int i = 0; i < len; i++)
+	{
+		pMsg->msgText[i] = 'a';
+	}
+	pMsg->msgText[len] = '\0';
 }
 
 int saveMsgHistoryToBFile(FILE* fp, const UserMsgHistory* pHistory)
@@ -181,7 +239,13 @@ void msgHistoryActionMenu(UserMsgHistory* pHistory)
 				sortMsgs(pHistory);
 				break;
 			case 3:
-				
+				searchForMessage(pHistory);
+				break;
+			case 0:
+				printf("Returning to main menu.\n");
+				break;
+			default:
+				printf("Unknown option selected.\n");
 		}
 	} while (userChoice != 0);
 }
