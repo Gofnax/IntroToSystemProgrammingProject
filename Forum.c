@@ -9,27 +9,50 @@ int initForum(Forum* pForum)
 	}
 	pForum->userArrSize = 0;
 	pForum->currentUser = NULL;
+	L_init(&pForum->subjectList);
+	pForum->privateMsgBoxArr = (PrivateMsgBox*)malloc(1 * sizeof(PrivateMsgBox));
+	if (pForum->privateMsgBoxArr == NULL)
+		return -1;
+	pForum->privateMsgBoxArrSize = 0;
 	return 1;
 }
 
-int login(User* user, Forum* pForum)
+int login(Forum* pForum)
 {
+	char tempUserName[MAX_STR_LEN];
 	char tempPW[MAX_STR_LEN];
-	if (isUserInArr(user, pForum->userArr, pForum->userArrSize) != 1)
+	User* pTmpUser = (User*)malloc(1 * sizeof(User));
+	if (pTmpUser == NULL)
+		return -1;
+
+	printf("Enter your username: \n");
+	fgets(tempUserName, MAX_STR_LEN, stdin);
+	cleanNewlineChar(tempUserName);
+	pTmpUser->name = (char*)malloc(USERNAME_LEN * sizeof(char));
+	if (pTmpUser->name == NULL)
+		return -1;
+	strncpy(pTmpUser->name, tempUserName, USERNAME_LEN);
+
+	int userIndex = isUserInArr(pTmpUser, pForum->userArr, pForum->userArrSize);
+	if (userIndex == -1)
 	{
 		printf("User not found\n");
 		return -1;
 	}
+	freeUserContents(pTmpUser);	// to free the allocated space for the name we got from the user
+	free(pTmpUser);
+	pTmpUser = &pForum->userArr[userIndex];
+
 	int counter = 0;
 	int tries = 3;
 	while (counter < 3 && tries>0)
 	{
-		printf("Enter your Password max %d characters:\n", PW_LEN - 1);
+		printf("Enter your password:\n");
 		fgets(tempPW, MAX_STR_LEN, stdin);
 		cleanNewlineChar(tempPW);
-		if (isSamePassword(user, tempPW) != 0)
+		if (isSamePassword(pTmpUser, tempPW) != 0)
 		{
-			printf("Incorrect password try again, you have %d tries left\n", tries - 1);
+			printf("Incorrect password, try again: (%d tries left)\n", tries - 1);
 			counter++;
 			tries--;
 		}
@@ -40,10 +63,34 @@ int login(User* user, Forum* pForum)
 		printf("Too many tries, exiting program\n");
 		return -1;
 	}
-	pForum->currentUser = user;
-	printf("Logged in successfully %s\n", user->name);
-	//addUser(user, pForum);
+	pForum->currentUser = pTmpUser;
+	printf("Logged in successfully %s\n", pTmpUser->name);
 	return 1;
+}
+
+int registerUser(Forum* pForum)
+{
+	User* pTmpUser = (User*)malloc(1 * sizeof(User));
+	if (pTmpUser == NULL)
+		return -1;
+
+	int isNameTaken = 0;
+	do
+	{
+		initUserName(pTmpUser);
+		isNameTaken = isUserInArr(pTmpUser, pForum->userArr, pForum->userArrSize);
+		if (isNameTaken != -1)
+		{
+			printf("Username already taken.\n");
+			freeUserContents(pTmpUser);
+		}
+	} while (isNameTaken != -1);
+
+	initUserPassword(pTmpUser);
+	memcpy(&pForum->userArr[pForum->userArrSize - 1], pTmpUser, sizeof(User));
+	pForum->userArrSize++;
+	freeUserContents(pTmpUser);
+	free(pTmpUser);
 }
 
 void displayMsgHistory(User* user)
@@ -98,10 +145,10 @@ int isUserInArr(User* user, User* userArr, int userArrSize)
 	{
 		if (strcmp(user->name, userArr[i].name) == 0)
 		{
-			return 1;
+			return i;
 		}
 	}
-	return 0;
+	return -1;
 }
 
 int addUser(User* user, Forum* pForum)
@@ -112,7 +159,7 @@ int addUser(User* user, Forum* pForum)
 		return -1;
 	}
 	pForum->userArr = temp;
-	pForum->userArr[pForum->userArrSize] = *user;
+	pForum->userArr[pForum->userArrSize - 1] = *user;
 	pForum->userArrSize++;
 	printf("User %s added to forum\n", user->name);
 	return 1;
@@ -120,7 +167,19 @@ int addUser(User* user, Forum* pForum)
 
 void freeForumContent(Forum* pForum)
 {
+	if (pForum == NULL)
+		return;
+	for (int i = 0; i < pForum->userArrSize; i++)
+	{
+		freeUserContents(&pForum->userArr[i]);
+	}
 	free(pForum->userArr);
+	for (int i = 0; i < pForum->privateMsgBoxArrSize; i++)
+	{
+		freePrivateMsgBoxContents(&pForum->privateMsgBoxArr[i]);
+	}
+	free(pForum->privateMsgBoxArr);
+	L_free(&pForum->subjectList, freeSubjectContent);
 }
 
 void freeForum(Forum* pForum)
@@ -129,32 +188,39 @@ void freeForum(Forum* pForum)
 	free(pForum);
 }
 
-void startPrivateConversation(User* currentUser, User* user, Forum* pForum)
+void startPrivateConversation(User* pCurrentUser, User* pUser, Forum* pForum)
 {
-	PrivateMsgBox privateBox;
-	if (doesMsgBoxExist(currentUser, user, pForum->privateMsgBoxArr, pForum->privateMsgBoxArrSize) == 1)
-	{
-		printPrivateMsgs(&privateBox);
+	if (pCurrentUser == NULL || pUser == NULL || pForum == NULL)
 		return;
+	PrivateMsgBox* pPrivateBox;
+	int privateBoxIndex = doesMsgBoxExist(pCurrentUser, pUser, pForum->privateMsgBoxArr, pForum->privateMsgBoxArrSize);
+	if (privateBoxIndex != -1)
+	{
+		pPrivateBox = &pForum->privateMsgBoxArr[privateBoxIndex];
+		printPrivateMsgs(pPrivateBox);
 	}
 	else
 	{
-		initPrivateMsgBox(&privateBox, currentUser, user);
-		printPrivateMsgs(&privateBox);
-		return;
+		PrivateMsgBox* tmp = (PrivateMsgBox*)realloc(pForum->privateMsgBoxArr, (pForum->privateMsgBoxArrSize + 1) * sizeof(PrivateMsgBox));
+		if (tmp == NULL)
+			return;
+		pForum->privateMsgBoxArr = tmp;
+		pPrivateBox = &pForum->privateMsgBoxArr[pForum->privateMsgBoxArrSize - 1];
+		pForum->privateMsgBoxArrSize++;
+		initPrivateMsgBox(pPrivateBox, pCurrentUser, pUser);
 	}
-
+	privateMsgBoxMenu(pPrivateBox, pCurrentUser);
 }
 
-int doesMsgBoxExist(User* currentUser, User* user, PrivateMsgBox* privateMsgBoxArr, int privateMsgBoxArrSize)
+int doesMsgBoxExist(User* pCurrentUser, User* pUser, PrivateMsgBox* privateMsgBoxArr, int privateMsgBoxArrSize)
 {
 	for (int i = 0; i < privateMsgBoxArrSize; i++)
 	{
-		if ((strcmp(currentUser->name, privateMsgBoxArr[i].user1->name) == 0 && strcmp(user->name, privateMsgBoxArr[i].user2->name) == 0) ||
-			(strcmp(currentUser->name, privateMsgBoxArr[i].user2->name) == 0 && strcmp(user->name, privateMsgBoxArr[i].user1->name) == 0))
+		if ((strcmp(pCurrentUser->name, privateMsgBoxArr[i].user1->name) == 0 && strcmp(pUser->name, privateMsgBoxArr[i].user2->name) == 0) ||
+			(strcmp(pCurrentUser->name, privateMsgBoxArr[i].user2->name) == 0 && strcmp(pUser->name, privateMsgBoxArr[i].user1->name) == 0))
 		{
-			return 1;
+			return i;
 		}
 	}
-	return 0;
+	return -1;
 }
