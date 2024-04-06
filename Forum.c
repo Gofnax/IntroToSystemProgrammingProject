@@ -104,26 +104,59 @@ void displayMsgHistory(User* user)
 
 void displaySubjectList(LIST* pSubjectList)
 {
-	//printf("Displaying subject list\n");
-	L_print(pSubjectList, printSubject);
+	L_print(pSubjectList, printSubjectTitle);
 }
 
 int chooseSubject(LIST* pSubjectList, User* pCurrUser)
 {
-	int choice;
-	char buff[2] = { 0 };
-	printf("Choose a subject:\n");
-	displaySubjectList(pSubjectList);
-	(void)scanf("%d", &choice);
-	(void)gets(buff);	// buffer cleaning
-	if (choice < 1 || choice > L_size(pSubjectList))
-	{
-		printf("Invalid choice\n");
+	if (pSubjectList == NULL || pCurrUser == NULL)
 		return -1;
-	}
-	Subject* pSubject = (Subject*)(L_getAt(pSubjectList, choice - 1)->key);
-	printSubject(pSubject);
-	subjectActionsMenu(pSubject, pCurrUser);
+	int choice, subjectChoice;
+	char buff[2] = { 0 };
+	Subject* pSubject;
+	do
+	{
+		if (L_size(pSubjectList) > 0)
+		{
+			printf("The subjects are:\n");
+			displaySubjectList(pSubjectList);
+			printf("Choose action: (1 - Open Subject | 2 - Add a New Subject | 0 - Exit)\n");
+			(void)scanf("%d", &choice);
+			(void)gets(buff);	// buffer cleaning
+		}
+		else
+		{
+			printf("There are no existing subjects. Creating a new one:\n");
+			choice = 2;
+		}
+		switch (choice)
+		{
+			case 1:
+				printf("Choose the subject:\n");
+				(void)scanf("%d", &subjectChoice);
+				(void)gets(buff);	// buffer cleaning
+				if (subjectChoice < 1 || subjectChoice > L_size(pSubjectList))
+				{
+					printf("Invalid choice.\n");
+				}
+				pSubject = (Subject*)(L_getAt(pSubjectList, subjectChoice - 1)->key);
+				printSubject(pSubject);
+				subjectActionsMenu(pSubject, pCurrUser);
+				choice = 1;
+				break;
+			case 2:
+				addSubject(pSubjectList);
+				pSubject = (Subject*)(pSubjectList->head.next->key);
+				subjectActionsMenu(pSubject, pCurrUser);
+				break;
+			case 0:
+				printf("Returning to main menu.\n");
+				break;
+			default:
+				printf("Unknown option selected.\n");
+		}
+	} while (choice != 0);
+	
 	return 1;
 }
 
@@ -302,6 +335,7 @@ void loadMsgHistory(Forum* pForum)
 				if (strcmp(currMsg->authorName, pForum->currentUser->name) == 0)
 				{
 					documentMsg(&pForum->currentUser->msgHistory, currMsg);
+					pForum->currentUser->msgHistory.numOfMsgs--;
 					documentedMsgsCounter++;
 				}
 			}

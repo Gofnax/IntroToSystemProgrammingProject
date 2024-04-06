@@ -63,6 +63,7 @@ int addMessage(Thread* pThread, User* pCurrentUser)
 	{
 		return -1;
 	}
+	documentMsg(&pCurrentUser->msgHistory, &pThread->messageArr[pThread->messageArrSize]);
 	pThread->messageArrSize++;
 	return 1;
 }
@@ -75,6 +76,7 @@ void threadActionsMenu(Thread* pThread, User* pCurrentUser)
 	char buff[2] = { 0 };
 	do
 	{
+		printf("Current thread: %s\n", pThread->title);
 		printf("Choose action: (1 - Write a New Message | 2 - Like a Message | 3 - Display All Messages | 0 - Exit Thread)\n");
 		(void)scanf("%d", &userChoice);
 		(void)gets(buff);	// buffer cleaning

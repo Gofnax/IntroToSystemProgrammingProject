@@ -29,6 +29,8 @@ void printMsg(const Message* pMsg)
 	printf("Author: %s\n%s\n", pMsg->authorName, getTimeString(&pMsg->timeWritten));
 	printf("--------------------\n");	// 20 '-' for visuals
 	printf("%s\n", pMsg->msgText);
+	printf("--------------------\n");	// 20 '-' for visuals
+	printf("Likes: %d\n", pMsg->likesCounter);
 	printf("----------------------------------------\n");	// 40 '-' for visuals
 }
 

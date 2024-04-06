@@ -12,9 +12,10 @@ typedef struct
 int initSubject(Subject* pSubject);
 int createSubjectTitle(Subject* pSubject);
 void printThreadArr(Thread** threadArr, int threadArrSize);
-void chooseThread(Thread** threadArr, int threadArrSize, User* pCurrUser);
+void chooseThread(Subject* pSubject, User* pCurrUser);
 int  addThread(Subject* pSubject, Thread* pThread);
 void printSubject(const Subject* pSubject);
+void printSubjectTitle(const Subject* pSubject);
 void subjectActionsMenu(Subject* pSubject, User* pCurrUser);
 void freeSubjectContent(Subject* pSubject);
 void freeSubject(Subject* pSubject);

@@ -141,6 +141,7 @@ int L_print(const LIST* pList, void (*printData)(const void*))
 	while(tmp != NULL)
 	{
 		//printf(" %d ---> ", tmp->key);
+		printf("%d. ", c + 1);
 		printData(tmp->key);
 		c++;
 		tmp = tmp->next;
