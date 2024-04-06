@@ -18,6 +18,7 @@ void testTimeStampBinaryFile();
 void testMessageBinaryFile();
 void testUserBinaryFile();
 void testThreadBinaryFile();
+void testSubjectBinaryFilr();
 
 
 int main(void)
@@ -36,7 +37,8 @@ int main(void)
 	//testUserBinaryFile();
 	//testThread();
 	//testSubject();
-	testThreadBinaryFile();
+	//testThreadBinaryFile();
+	testSubjectBinaryFilr();
 }
 
 void forumLoadMenu(Forum* pForum)
@@ -187,4 +189,33 @@ void testThreadBinaryFile()
 	fclose(fp);
 	printf("Printing thread2:\n");
 	printThread(&thread2);
+}
+
+void testSubjectBinaryFilr()
+{
+	FILE* fp = fopen("userTest.bin", "rb");
+	User user1;
+	readUserFromBFile(fp, &user1);
+	fclose(fp);
+	fp = fopen("threadTest.bin", "rb");
+	Thread thread1;
+	readThreadFromBFile(fp, &thread1);
+	fclose(fp);
+	fp = fopen("subjectTest.bin", "wb");
+	Subject subject1;
+	initSubject(&subject1);
+	addThread(&subject1, &thread1);
+	subjectActionsMenu(&subject1, &user1);
+	printf("\nPrinting subject1:\n");
+	printSubject(&subject1);
+	printf("\nSaving subject to B file\n");
+	saveSubjectToBFile(fp, &subject1);
+	fclose(fp);
+	fp = fopen("subjectTest.bin", "rb");
+	printf("\Reading subject to B file\n");
+	Subject subject2;
+	readSubjectFromBFile(fp, &subject2);
+	fclose(fp);
+	printf("\nPrinting subject2:\n");
+	printSubject(&subject2);
 }

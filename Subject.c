@@ -61,53 +61,6 @@ void chooseThread(Subject* pSubject, User* pCurrUser)
 	} while (choice < 1 || choice > pSubject->threadArrSize);
 	printThread(pSubject->threadArr[choice - 1]);
 	threadActionsMenu(pSubject->threadArr[choice - 1], pCurrUser);
-	//if (pSubject == NULL || pCurrUser == NULL)
-	//	return;
-	//int choice;
-	//char buff[2] = { 0 };
-	//do
-	//{
-	//	if (pSubject->threadArrSize > 0)
-	//	{
-	//		printf("The threads are:\n");
-	//		printThreadArr(pSubject->threadArr, pSubject->threadArrSize);
-	//		printf("Choose action: (1 - Open Thread | 2 - Add a New Thread | 0 - Exit)\n");
-	//		(void)scanf("%d", &choice);
-	//		(void)gets(buff);	// buffer cleaning
-	//	}
-	//	else
-	//	{
-	//		printf("There are no existing threads. Creating a new one:\n");
-	//		choice = 2;
-	//	}
-	//	switch (choice)
-	//	{
-	//		case 1:
-	//			printf("Choose a thread:\n");
-	//			(void)scanf("%d", &choice);
-	//			(void)gets(buff);	// buffer cleaning
-	//			if (choice < 1 || choice > pSubject->threadArrSize)
-	//			{
-	//				printf("Invalid choice.\n");
-	//			}
-	//			printThread(pSubject->threadArr[choice - 1]);
-	//			threadActionsMenu(pSubject->threadArr[choice - 1], pCurrUser);
-	//			break;
-	//		case 2:
-	//			{
-	//				Thread* newThread = (Thread*)malloc(1 * sizeof(Thread));
-	//				initThread(newThread, pCurrUser);
-	//				addThread(pSubject, newThread);
-	//				threadActionsMenu(pSubject->threadArr[pSubject->threadArrSize - 1], pCurrUser);
-	//			}
-	//			break;
-	//		case 0:
-	//			printf("Returning to main menu.\n");
-	//			break;
-	//		default:
-	//			printf("Unknown option selected.\n");
-	//	}
-	//} while (choice != 0);
 }
 
 int  addThread(Subject* pSubject, Thread* pThread)
@@ -174,6 +127,54 @@ void subjectActionsMenu(Subject* pSubject, User* pCurrUser)
 				printf("Unknown option selected.\n");
 		}
 	} while (userChoice != 0);
+}
+
+int saveSubjectToBFile(FILE* fp, const Subject* pSubject)
+{
+	if (fp == NULL || pSubject == NULL)
+		return -1;
+	int len = (int)strlen(pSubject->title) + 1;
+	if (fwrite(&len, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (fwrite(pSubject->title, sizeof(char), len, fp) != len)
+		return -1;
+	if (fwrite(&pSubject->threadArrSize, sizeof(int), 1, fp) != 1)
+		return -1;
+	for (int i = 0; i < pSubject->threadArrSize; i++)
+	{
+		if (saveThreadToBFile(fp, pSubject->threadArr[i]) == -1)
+			return -1;
+	}
+	return 1;
+}
+
+int readSubjectFromBFile(FILE* fp, Subject* pSubject)
+{
+	if (fp == NULL || pSubject == NULL)
+		return -1;
+	pSubject->title = (char*)malloc(sizeof(char) * MAX_TITLE_NAME);
+	NULL_CHECK(pSubject->title, -1);
+	int len = 0;
+	if (fread(&len, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (len > MAX_TITLE_NAME)
+		return -1;
+	if (fread(pSubject->title, sizeof(char), len, fp) != len)
+		return -1;
+	int numOfThreads = 0;
+	if (fread(&numOfThreads, sizeof(int), 1, fp) != 1)
+		return -1;
+	pSubject->threadArrSize = numOfThreads;
+	pSubject->threadArr = (Thread**)malloc(sizeof(Thread*) * numOfThreads);
+	NULL_CHECK(pSubject->threadArr, -1);
+	for (int i = 0; i < numOfThreads; i++)
+	{
+		pSubject->threadArr[i] = (Thread*)malloc(1 * sizeof(Thread));
+		NULL_CHECK(pSubject->threadArr[i], -1);
+		if (readThreadFromBFile(fp, pSubject->threadArr[i]) == -1)
+			return -1;
+	}
+	return 1;
 }
 
 int saveSubjectToTextFile(const Subject* pSubject, FILE* fp)
