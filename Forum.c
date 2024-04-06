@@ -72,8 +72,7 @@ int login(Forum* pForum)
 int registerUser(Forum* pForum)
 {
 	User* pTmpUser = (User*)malloc(1 * sizeof(User));
-	if (pTmpUser == NULL)
-		return -1;
+	NULL_CHECK(pTmpUser, -1);
 
 	int isNameTaken = 0;
 	do
@@ -83,7 +82,6 @@ int registerUser(Forum* pForum)
 		if (isNameTaken != -1)
 		{
 			printf("Username already taken.\n");
-			freeUserContents(pTmpUser);
 		}
 	} while (isNameTaken != -1);
 
@@ -196,7 +194,6 @@ int addUser(User* user, Forum* pForum)
 	}
 	pForum->userArr = temp;
 	memcpy(&pForum->userArr[pForum->userArrSize], user, sizeof(User));
-	//pForum->userArr[pForum->userArrSize] = *user;
 	pForum->userArrSize++;
 	printf("User %s added to forum\n", user->name);
 	return 1;
@@ -219,7 +216,7 @@ void startPrivateConversation(User* pCurrentUser, User* pUser, Forum* pForum)
 		if (tmp == NULL)
 			return;
 		pForum->privateMsgBoxArr = tmp;
-		pPrivateBox = &pForum->privateMsgBoxArr[pForum->privateMsgBoxArrSize - 1];
+		pPrivateBox = &pForum->privateMsgBoxArr[pForum->privateMsgBoxArrSize];
 		pForum->privateMsgBoxArrSize++;
 		initPrivateMsgBox(pPrivateBox, pCurrentUser, pUser);
 	}
@@ -264,10 +261,10 @@ void forumMainMenu(Forum* pForum)
 				msgHistoryActionMenu(&pForum->currentUser->msgHistory);
 				break;
 			case 0:
-				fp = fopen(SYSTEM_TEXT_FILE, "w");
+				/*fp = fopen(SYSTEM_TEXT_FILE, "w");
 				saveForumToTextFile(pForum, fp);
-				fclose(fp);
-				fp = fopen(SYSTEM_BIN_FILE, "wb");
+				fclose(fp);*/
+				//fp = fopen(SYSTEM_BIN_FILE, "wb");
 				//saveForumToBFile(fp, pForum);
 				break;
 			default:
@@ -288,6 +285,11 @@ int choosePrivateChatPartner(User* pCurrentUser, Forum* pForum)
 	if (len > USERNAME_LEN || partnerIndex == -1)
 	{
 		printf("No user with such name.\n");
+		return -1;
+	}
+	else if (strcmp(pCurrentUser->name, pTmpUser->name) == 0)
+	{
+		printf("Can't chat with yourself.\n");
 		return -1;
 	}
 
@@ -347,6 +349,87 @@ void loadMsgHistory(Forum* pForum)
 		}
 		currSubject = currSubject->next;
 	}
+}
+
+int saveForumToBFile(FILE* fp, Forum* pForum)
+{
+	if(fp == NULL || pForum == NULL)
+		return -1;
+	int numOfSubjects = L_size(&pForum->subjectList);
+	if (fwrite(&numOfSubjects, sizeof(int), 1, fp) != 1)
+		return -1;
+	NODE* currSubject = pForum->subjectList.head.next;
+	for (int i = 0; i < numOfSubjects && currSubject != NULL; i++)
+	{
+		if (saveSubjectToBFile(fp, (Subject*)(currSubject->key)) == -1)
+			return -1;
+		currSubject = currSubject->next;
+	}
+	if (fwrite(&pForum->userArrSize, sizeof(int), 1, fp) != 1)
+		return -1;
+	for (int i = 0; i < pForum->userArrSize; i++)
+	{
+		if (saveUserToBFile(fp, &pForum->userArr[i]) == -1)
+			return -1;
+	}
+	if (fwrite(&pForum->privateMsgBoxArrSize, sizeof(int), 1, fp) != 1)
+		return -1;
+	for (int i = 0; i < pForum->privateMsgBoxArrSize; i++)
+	{
+		if (savePrivateMsgBoxToBFile(fp, &pForum->privateMsgBoxArr[i]) == -1)
+			return -1;
+	}
+	return 1;
+}
+
+int readForumFromBFile(FILE* fp, Forum* pForum)
+{
+	if (fp == NULL || pForum == NULL)
+		return -1;
+	L_init(&pForum->subjectList);
+	int numOfSubjects = 0;
+	if (fread(&numOfSubjects, sizeof(int), 1, fp) != 1)
+		return -1;
+	NODE* lastSubjectNode = &pForum->subjectList.head;
+	for (int i = 0; i < numOfSubjects; i++)
+	{
+		Subject* currSubject = (Subject*)malloc(1 * sizeof(Subject));
+		NULL_CHECK(currSubject, -1);
+		if (readSubjectFromBFile(fp, currSubject) == -1)
+			return -1;
+		L_insert(lastSubjectNode, currSubject);
+		lastSubjectNode = lastSubjectNode->next;
+	}
+
+	if (fread(&pForum->userArrSize, sizeof(int), 1, fp) != 1)
+		return -1;
+	pForum->userArr = (User*)malloc((pForum->userArrSize) * sizeof(User));
+	NULL_CHECK(pForum->userArr, -1);
+	for (int i = 0; i < pForum->userArrSize; i++)
+	{
+		if (readUserFromBFile(fp, &pForum->userArr[i]) == -1)
+			return -1;
+	}
+
+	if (fread(&pForum->privateMsgBoxArrSize, sizeof(int), 1, fp) != 1)
+		return -1;
+	pForum->privateMsgBoxArr = (PrivateMsgBox*)malloc((pForum->privateMsgBoxArrSize) * sizeof(PrivateMsgBox));
+	NULL_CHECK(pForum->privateMsgBoxArr, -1);
+	for (int i = 0; i < pForum->privateMsgBoxArrSize; i++)
+	{
+		if (readPrivateMsgBoxFromBFile(fp, &pForum->privateMsgBoxArr[i]) == -1)
+			return -1;
+		for (int j = 0; j < pForum->userArrSize; j++)
+		{
+			if (strcmp(pForum->userArr[j].name, pForum->privateMsgBoxArr[i].userName1) == 0)
+				pForum->privateMsgBoxArr[i].user1 = &pForum->userArr[j];
+			else if(strcmp(pForum->userArr[j].name, pForum->privateMsgBoxArr[i].userName2) == 0)
+				pForum->privateMsgBoxArr[i].user2 = &pForum->userArr[j];
+		}
+	}
+
+	pForum->currentUser = NULL;
+	return 1;
 }
 
 int saveForumToTextFile(const Forum* pForum, FILE* fp)

@@ -36,6 +36,8 @@ void forumMainMenu(Forum* pForum);
 int choosePrivateChatPartner(User* pCurrentUser, Forum* pForum);
 void loginRegisterMenu(Forum* pForum);
 void loadMsgHistory(Forum* pForum);
+int saveForumToBFile(FILE* fp, Forum* pForum);
+int readForumFromBFile(FILE* fp, Forum* pForum);
 int saveForumToTextFile(const Forum* pForum, FILE* fp);
 int saveSubjectListToTextFile(const LIST subjectList, FILE* fp);
 int savePrivateMsgBoxArrToTextFile(const PrivateMsgBox* privateMsgBoxArr, const int privateMsgBoxArrSize, FILE* fp);

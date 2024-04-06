@@ -19,6 +19,7 @@ void testMessageBinaryFile();
 void testUserBinaryFile();
 void testThreadBinaryFile();
 void testSubjectBinaryFilr();
+void testForumBinaryFile();
 
 
 int main(void)
@@ -38,7 +39,8 @@ int main(void)
 	//testThread();
 	//testSubject();
 	//testThreadBinaryFile();
-	testSubjectBinaryFilr();
+	//testSubjectBinaryFilr();
+	testForumBinaryFile();
 }
 
 void forumLoadMenu(Forum* pForum)
@@ -218,4 +220,40 @@ void testSubjectBinaryFilr()
 	fclose(fp);
 	printf("\nPrinting subject2:\n");
 	printSubject(&subject2);
+}
+
+void testForumBinaryFile()
+{
+	FILE* fp = fopen("userTest.bin", "rb");
+	User user1, user2;
+	user2.name = (char*)malloc(USERNAME_LEN * sizeof(char));
+	NULL_CHECK(user2.name, );
+	strncpy(user2.name, "Username2", 10);
+	strncpy(user2.password, "123", 4);
+	readUserFromBFile(fp, &user1);
+	fclose(fp);
+	fp = fopen("threadTest.bin", "rb");
+	Thread thread1;
+	readThreadFromBFile(fp, &thread1);
+	fclose(fp);
+	fp = fopen("subjectTest.bin", "rb");
+	Subject subject1;
+	readSubjectFromBFile(fp, &subject1);
+	fclose(fp);
+	fp = fopen("forumTest.bin", "wb");
+	Forum forum1;
+	initForum(&forum1);
+	addUser(&user1, &forum1);
+	addUser(&user2, &forum1);
+	L_insert(&forum1.subjectList.head, &subject1);
+	forumMainMenu(&forum1);
+	printf("\nSaving forum to B file\n");
+	saveForumToBFile(fp, &forum1);
+	fclose(fp);
+	fp = fopen("forumTest.bin", "rb");
+	printf("\Reading forum from B file\n");
+	Forum forum2;
+	readForumFromBFile(fp, &forum2);
+	fclose(fp);
+	forumMainMenu(&forum2);
 }

@@ -39,9 +39,6 @@ int initUser(User* pUser)
 int initUserName(User* pUser)
 {
 	NULL_CHECK(pUser, -1);
-	/*pUser->name = (char*)malloc(USERNAME_LEN * sizeof(char));
-	if (pUser->name == NULL)
-		return -1;*/
 
 	printf("Enter username: ");
 	char maxCharMsg[20];

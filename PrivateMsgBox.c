@@ -125,8 +125,8 @@ int readPrivateMsgBoxFromBFile(FILE* fp, PrivateMsgBox* pPrivateBox)
 		if(readMsgFromBFile(fp, &pPrivateBox->messageArr[i]) == -1)
 			return -1;
 	}
-	// I still need to add a call to a function that finds a User by their username
-	// to fill the User fields of the box
+	pPrivateBox->user1 = NULL;
+	pPrivateBox->user2 = NULL;
 	return 1;
 }
 
@@ -152,9 +152,9 @@ int loadPrivateMsgBoxFromTextFile(PrivateMsgBox* privateMsgBox, FILE* fp)
 	{
 		return -1;
 	}
-	fscanf(fp, "%s\n", privateMsgBox->user1->name);
-	fscanf(fp, "%s\n", privateMsgBox->user2->name);
-	fscanf(fp, "%d\n", &privateMsgBox->numOfMsgs);
+	(void)fscanf(fp, "%s\n", privateMsgBox->user1->name);
+	(void)fscanf(fp, "%s\n", privateMsgBox->user2->name);
+	(void)fscanf(fp, "%d\n", &privateMsgBox->numOfMsgs);
 	for (int i = 0; i < privateMsgBox->numOfMsgs; i++)
 	{
 		Message* message = (Message*)malloc(sizeof(Message));
