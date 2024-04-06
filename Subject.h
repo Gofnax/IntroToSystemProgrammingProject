@@ -17,5 +17,7 @@ int  addThread(Subject* pSubject, Thread* pThread);
 void printSubject(const Subject* pSubject);
 void printSubjectTitle(const Subject* pSubject);
 void subjectActionsMenu(Subject* pSubject, User* pCurrUser);
+int saveSubjectToTextFile(const Subject* pSubject, FILE* fp);
+int loadSubjectFromTextFile(Subject* pSubject, FILE* fp);
 void freeSubjectContent(Subject* pSubject);
 void freeSubject(Subject* pSubject);

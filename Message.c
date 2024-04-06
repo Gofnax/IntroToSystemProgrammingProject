@@ -102,6 +102,38 @@ int readMsgFromBFile(FILE* fp, Message* pMsg)
 	return 1;
 }
 
+int saveMessageToTextFile(const Message* message, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	fprintf(fp, "%s\n", message->msgText);
+	fprintf(fp, "%s\n", message->authorName);
+	fprintf(fp, "%d\n", message->likesCounter);
+	if (saveTimeStampToTextFile(&message->timeWritten, fp) != 1)
+	{
+		return -1;
+	}
+	return 1;
+}
+
+int loadMessageFromTextFile(Message* message, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	(void)fscanf(fp, "%s\n", message->msgText);
+	(void)fscanf(fp, "%s\n", message->authorName);
+	(void)fscanf(fp, "%d\n", &message->likesCounter);
+	if (loadTimeStampFromTextFile(&message->timeWritten, fp) != 1)
+	{
+		return -1;
+	}
+	return 1;
+}
+
 void freeMessageContents(Message* pMsg)
 {
 	if (pMsg == NULL)

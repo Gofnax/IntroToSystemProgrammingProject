@@ -20,5 +20,7 @@ int writeMessage(PrivateMsgBox* pPrivateBox, User* pUser);
 void printPrivateMsgs(PrivateMsgBox* pPrivateBox);
 int savePrivateMsgBoxToBFile(FILE* fp, const PrivateMsgBox* pPrivateBox);
 int readPrivateMsgBoxFromBFile(FILE* fp, PrivateMsgBox* pPrivateBox);
+int savePrivateMsgBoxToTextFile(const PrivateMsgBox* privateMsgBox, FILE* fp);
+int loadPrivateMsgBoxFromTextFile(PrivateMsgBox* privateMsgBox, FILE* fp);
 void freePrivateMsgBoxContents(PrivateMsgBox* pPrivateBox);
 void freePrivateMsgBox(PrivateMsgBox* pPrivateBox);

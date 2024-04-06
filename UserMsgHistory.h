@@ -33,5 +33,7 @@ void searchMsgByLengthHelper(Message* pMsg);
 int saveMsgHistoryToBFile(FILE* fp, const UserMsgHistory* pHistory);
 int readMsgHistoryFromBFile(FILE* fp, UserMsgHistory* pHistory);
 void msgHistoryActionMenu(UserMsgHistory* pHistory);
+int saveMsgHistoryToTextFile(const UserMsgHistory* pHistory, FILE* fp);
+int loadMsgHistoryFromTextFile(UserMsgHistory* pHistory, FILE* fp);
 void freeMsgHistoryContents(UserMsgHistory* pHistory);
 void freeMsgHistory(UserMsgHistory* pHistory);

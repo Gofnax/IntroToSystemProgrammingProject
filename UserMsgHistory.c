@@ -250,6 +250,28 @@ void msgHistoryActionMenu(UserMsgHistory* pHistory)
 	} while (userChoice != 0);
 }
 
+int saveMsgHistoryToTextFile(const UserMsgHistory* pHistory, FILE* fp)
+{
+	if (fp == NULL || pHistory == NULL)
+		return -1;
+	fprintf(fp, "%d\n", pHistory->numOfMsgs);
+	fprintf(fp, "%d\n", pHistory->maxNumOfMsgs);
+	return 1;
+}
+
+int loadMsgHistoryFromTextFile(UserMsgHistory* pHistory, FILE* fp)
+{
+	if (fp == NULL || pHistory == NULL)
+		return -1;
+	if (fscanf(fp, "%d\n", &pHistory->numOfMsgs) != 1)
+		return -1;
+	if (fscanf(fp, "%d\n", &pHistory->maxNumOfMsgs) != 1)
+		return -1;
+	pHistory->msgHistory = (Message**)calloc(pHistory->maxNumOfMsgs, sizeof(Message*));
+	pHistory->currentSort = eNoSort;
+	return 1;
+}
+
 void freeMsgHistoryContents(UserMsgHistory* pHistory)
 {
 	if (pHistory == NULL)

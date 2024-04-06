@@ -6,6 +6,10 @@
 #ifndef _DEF_
 #define _DEF_
 
+// defining the names of the files
+#define SYSTEM_TEXT_FILE "system.txt"
+#define SYSTEM_BIN_FILE "system.bin"
+
 // a value not supposed in stack and queue
 #define		EMPTY	0x7FFFFFFF
 
@@ -19,7 +23,7 @@
 // the maximum number of characters allowed in a title
 #define MAX_TITLE_NAME 41
 
-// Macro defenition
+// Macro definition
 #define NULL_CHECK(ptr, num) {\
 				if(ptr == NULL)\
 					return num;\

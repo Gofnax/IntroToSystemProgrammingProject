@@ -93,3 +93,31 @@ int readTimeFromBFileCompressed(FILE* fp, TimeStamp* pTime)
 
 	return 1;
 }
+
+int saveTimeStampToTextFile(const TimeStamp* timeStamp, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	fprintf(fp, "%d\n", timeStamp->day);
+	fprintf(fp, "%d\n", timeStamp->month);
+	fprintf(fp, "%d\n", timeStamp->year);
+	fprintf(fp, "%d\n", timeStamp->hour);
+	fprintf(fp, "%d\n", timeStamp->minute);
+	return 1;
+}
+
+int loadTimeStampFromTextFile(TimeStamp* timeStamp, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	(void)fscanf(fp, "%d\n", &timeStamp->day);
+	(void)fscanf(fp, "%d\n", &timeStamp->month);
+	(void)fscanf(fp, "%d\n", &timeStamp->year);
+	(void)fscanf(fp, "%d\n", &timeStamp->hour);
+	(void)fscanf(fp, "%d\n", &timeStamp->minute);
+	return 1;
+}

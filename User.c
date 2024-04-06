@@ -121,6 +121,47 @@ int readUserFromBFile(FILE* fp, User* pUser)
 	return 1;
 }
 
+int saveUserToTextFile(const User* user, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	fprintf(fp, "%s\n", user->name);
+	fprintf(fp, "%s\n", user->password);
+	fprintf(fp, "%d\n", user->msgHistory.numOfMsgs);
+	for (int i = 0; i < user->msgHistory.numOfMsgs; i++)
+	{
+		saveMessageToTextFile(user->msgHistory.msgHistory[i], fp);
+	}
+	return 1;
+}
+
+int loadUserFromTextFile(User* user, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	(void)fscanf(fp, "%s\n", user->name);
+	(void)fscanf(fp, "%s\n", user->password);
+	(void)fscanf(fp, "%d\n", &user->msgHistory.numOfMsgs);
+	for (int i = 0; i < user->msgHistory.numOfMsgs; i++)
+	{
+		Message* message = (Message*)malloc(sizeof(Message));
+		if (message == NULL)
+		{
+			return -1;
+		}
+		if (loadMessageFromTextFile(message, fp) != 1)
+		{
+			return -1;
+		}
+		user->msgHistory.msgHistory[i] = message;
+	}
+	return 1;
+}
+
 void freeUserContents(User* pUser)
 {
 	if (pUser == NULL)

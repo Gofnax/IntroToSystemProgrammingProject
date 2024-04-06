@@ -176,6 +176,47 @@ void subjectActionsMenu(Subject* pSubject, User* pCurrUser)
 	} while (userChoice != 0);
 }
 
+int saveSubjectToTextFile(const Subject* pSubject, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	fprintf(fp, "%s\n", pSubject->title);
+	fprintf(fp, "%d\n", pSubject->threadArrSize);
+	for (int i = 0; i < pSubject->threadArrSize; i++)
+	{
+		saveThreadToTextFile(pSubject->threadArr[i], fp);
+	}
+	return 1;
+}
+
+int loadSubjectFromTextFile(Subject* pSubject, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	fseek(fp, 0, SEEK_SET);
+	(void)fscanf(fp, "%s\n", pSubject->title);
+	(void)fscanf(fp, "%d\n", &pSubject->threadArrSize);
+	pSubject->threadArr = (Thread**)malloc(sizeof(Thread*) * pSubject->threadArrSize);
+	if (pSubject->threadArr == NULL)
+	{
+		return -1;
+	}
+	for (int i = 0; i < pSubject->threadArrSize; i++)
+	{
+		pSubject->threadArr[i] = (Thread*)malloc(sizeof(Thread));
+		if (pSubject->threadArr[i] == NULL)
+		{
+			return -1;
+		}
+		loadThreadFromTextFile(pSubject->threadArr[i], fp);
+	}
+	return 1;
+}
+
 void freeSubjectContent(Subject* pSubject)
 {
 	free(pSubject->title);

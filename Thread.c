@@ -102,8 +102,7 @@ void threadActionsMenu(Thread* pThread, User* pCurrentUser)
 
 void likeMsg(Thread* pThread)
 {
-	if (pThread == NULL)
-		return;
+	NULL_CHECK(pThread, );
 	int userChoice;
 	char buff[2] = { 0 };
 	printf("Enter the number of the message you like:\n");
@@ -117,6 +116,104 @@ void likeMsg(Thread* pThread)
 	{
 		pThread->messageArr[userChoice - 1].likesCounter++;
 	}
+}
+
+int saveThreadToBFile(FILE* fp, const Thread* pThread)
+{
+	if (fp == NULL || pThread == NULL)
+		return -1;
+	int len = (int)strlen(pThread->title) + 1;
+	if (fwrite(&len, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (fwrite(pThread->title, sizeof(char), len, fp) != len)
+		return -1;
+	if (saveMsgToBFile(fp, &pThread->primaryMsg) == -1)
+		return -1;
+	if (fwrite(&pThread->messageArrSize, sizeof(int), 1, fp) != 1)
+		return -1;
+	for (int i = 0; i < pThread->messageArrSize; i++)
+	{
+		if (saveMsgToBFile(fp, &pThread->messageArr[i]) == -1)
+			return -1;
+	}
+	return 1;
+}
+
+int readThreadFromBFile(FILE* fp, Thread* pThread)
+{
+	if (fp == NULL || pThread == NULL)
+		return -1;
+	int len, numOfMsgs;
+	if (fread(&len, sizeof(int), 1, fp) != 1)
+		return -1;
+	if (len > MAX_TITLE_NAME)
+		return -1;
+	pThread->title = (char*)malloc(sizeof(char) * MAX_TITLE_NAME);
+	NULL_CHECK(pThread->title, -1);
+	if (fread(pThread->title, sizeof(char), len, fp) != len)
+		return -1;
+	if (readMsgFromBFile(fp, &pThread->primaryMsg) == -1)
+		return -1;
+	if (fread(&numOfMsgs, sizeof(int), 1, fp) != 1)
+		return -1;
+	pThread->messageArrSize = numOfMsgs;
+	pThread->messageArr = (Message*)malloc(sizeof(Message) * numOfMsgs);
+	NULL_CHECK(pThread->messageArr, -1);
+	for (int i = 0; i < numOfMsgs; i++)
+	{
+		if (readMsgFromBFile(fp, &pThread->messageArr[i]) == -1)
+			return -1;
+	}
+	return 1;
+}
+
+int saveThreadToTextFile(const Thread* pThread, FILE* fp)
+{
+	if (fp == NULL || pThread == NULL)
+	{
+		return -1;
+	}
+	fprintf(fp, "%d\n", pThread->messageArrSize);
+	fprintf(fp, "%s\n", pThread->title);
+	fprintf(fp, "%s\n", pThread->primaryMsg.msgText);
+	for (int i = 0; i < pThread->messageArrSize; i++)
+	{
+		fprintf(fp, "%s\n", pThread->messageArr[i].msgText);
+	}
+	return 1;
+}
+
+int loadThreadFromTextFile(Thread* pThread, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	if (fscanf(fp, "%d\n", &pThread->messageArrSize) != 1)
+	{
+		return -1;
+	}
+	if (fscanf(fp, "%s\n", pThread->title) != 1)
+	{
+		return -1;
+	}
+	if (loadMessageFromTextFile(&pThread->primaryMsg, fp) != 1)
+	{
+		return -1;
+	}
+	pThread->messageArr = (Message*)malloc(sizeof(Message) * pThread->messageArrSize);
+	if (pThread->messageArr == NULL)
+	{
+		return -1;
+	}
+	for (int i = 0; i < pThread->messageArrSize; i++)
+	{
+		if (loadMessageFromTextFile(&pThread->messageArr[i], fp) != 1)
+		{
+			return -1;
+		}
+	}
+	return 1;
 }
 
 void freeThreadContent(Thread* pThread)

@@ -130,6 +130,47 @@ int readPrivateMsgBoxFromBFile(FILE* fp, PrivateMsgBox* pPrivateBox)
 	return 1;
 }
 
+int savePrivateMsgBoxToTextFile(const PrivateMsgBox* privateMsgBox, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	fprintf(fp, "%s\n", privateMsgBox->user1->name);
+	fprintf(fp, "%s\n", privateMsgBox->user2->name);
+	fprintf(fp, "%d\n", privateMsgBox->numOfMsgs);
+	for (int i = 0; i < privateMsgBox->numOfMsgs; i++)
+	{
+		saveMessageToTextFile(&privateMsgBox->messageArr[i], fp);
+	}
+	return 1;
+}
+
+int loadPrivateMsgBoxFromTextFile(PrivateMsgBox* privateMsgBox, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	fscanf(fp, "%s\n", privateMsgBox->user1->name);
+	fscanf(fp, "%s\n", privateMsgBox->user2->name);
+	fscanf(fp, "%d\n", &privateMsgBox->numOfMsgs);
+	for (int i = 0; i < privateMsgBox->numOfMsgs; i++)
+	{
+		Message* message = (Message*)malloc(sizeof(Message));
+		if (message == NULL)
+		{
+			return -1;
+		}
+		if (loadMessageFromTextFile(message, fp) != 1)
+		{
+			return -1;
+		}
+		privateMsgBox->messageArr[i] = *message;
+	}
+	return 1;
+}
+
 void freePrivateMsgBoxContents(PrivateMsgBox* pPrivateBox)
 {
 	if (pPrivateBox == NULL)

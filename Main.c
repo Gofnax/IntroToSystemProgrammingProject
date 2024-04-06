@@ -10,12 +10,14 @@
 #include "Forum.h"
 
 int main(void);
+void forumLoadMenu(Forum* pForum);
 void testPrivateMsgBox();
 void testThread();
 void testSubject();
 void testTimeStampBinaryFile();
 void testMessageBinaryFile();
 void testUserBinaryFile();
+void testThreadBinaryFile();
 
 
 int main(void)
@@ -24,9 +26,9 @@ int main(void)
 	initTime(&time);
 	printf("%s\n", getTimeString(&time));
 
-	Forum forum1;
-	initForum(&forum1);
-	forumMainMenu(&forum1);
+	/*Forum forum1;
+	forumLoadMenu(&forum1);
+	forumMainMenu(&forum1);*/
 
 	//testPrivateMsgBox();
 	//testTimeStampBinaryFile();
@@ -34,13 +36,37 @@ int main(void)
 	//testUserBinaryFile();
 	//testThread();
 	//testSubject();
+	testThreadBinaryFile();
+}
 
-	/*Forum forum;
-	initForum(&forum);
-	User user1;
-	initUser(&user1);
-	addUser(&user1, &forum);
-	login(&user1, &forum);*/
+void forumLoadMenu(Forum* pForum)
+{
+	NULL_CHECK(pForum, );
+	int userChoice = 0;
+	char buff[2] = { 0 };
+	FILE* fp;
+	do
+	{
+		printf("How would you like to load the system?\n");
+		printf("(1 - Using Text Files | 2 - Using Binary Files | 3 - Clean System)\n");
+		(void)scanf("%d", &userChoice);
+		(void)gets(buff);	// buffer cleaning
+		switch (userChoice)
+		{
+			case 1:
+				fp = fopen(SYSTEM_TEXT_FILE, "r");
+				loadForumFromTextFile(pForum, fp);
+				fclose(fp);
+				break;
+			case 2:
+				break;
+			case 3:
+				initForum(pForum);
+				break;
+			default:
+				printf("Unknown option selected.\n");
+		}
+	} while (userChoice < 1 || userChoice > 3);
 }
 
 void testPrivateMsgBox()
@@ -137,4 +163,28 @@ void testUserBinaryFile()
 	fclose(fp);
 	printf("The name of the user read from the file is:\n");
 	printf("%s\n", user2.name);
+}
+
+void testThreadBinaryFile()
+{
+	FILE* fp = fopen("userTest.bin", "rb");
+	User user1;
+	readUserFromBFile(fp, &user1);
+	fclose(fp);
+	fp = fopen("threadTest.bin", "wb");
+	Thread thread1;
+	initThread(&thread1, &user1);
+	threadActionsMenu(&thread1, &user1);
+	printf("Printing thread1:\n");
+	printThread(&thread1);
+	printf("Saving thread to B file\n");
+	saveThreadToBFile(fp, &thread1);
+	fclose(fp);
+	fp = fopen("threadTest.bin", "rb");
+	printf("Reading thread from B file\n");
+	Thread thread2;
+	readThreadFromBFile(fp, &thread2);
+	fclose(fp);
+	printf("Printing thread2:\n");
+	printThread(&thread2);
 }

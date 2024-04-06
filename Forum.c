@@ -245,6 +245,7 @@ void forumMainMenu(Forum* pForum)
 	loginRegisterMenu(pForum);
 	int userChoice = 0;
 	char buff[2] = { 0 };
+	FILE* fp;
 	do
 	{
 		printf("Choose the desired action:\n");
@@ -263,7 +264,11 @@ void forumMainMenu(Forum* pForum)
 				msgHistoryActionMenu(&pForum->currentUser->msgHistory);
 				break;
 			case 0:
-				// save forum to binaray and text files
+				fp = fopen(SYSTEM_TEXT_FILE, "w");
+				saveForumToTextFile(pForum, fp);
+				fclose(fp);
+				fp = fopen(SYSTEM_BIN_FILE, "wb");
+				//saveForumToBFile(fp, pForum);
 				break;
 			default:
 				printf("Unknown option selected.\n");
@@ -342,6 +347,153 @@ void loadMsgHistory(Forum* pForum)
 		}
 		currSubject = currSubject->next;
 	}
+}
+
+int saveForumToTextFile(const Forum* pForum, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	if (saveSubjectListToTextFile(pForum->subjectList, fp) != 1)
+	{
+		return -1;
+	}
+	fprintf(fp, "%d\n", pForum->userArrSize);
+	for (int i = 0; i < pForum->userArrSize; i++)
+	{
+		saveUserToTextFile(&pForum->userArr[i], fp);
+	}
+	if (saveUserToTextFile(pForum->currentUser, fp) != 1)
+	{
+		return -1;
+	}
+	if (savePrivateMsgBoxArrToTextFile(pForum->privateMsgBoxArr, pForum->privateMsgBoxArrSize, fp) != 1)
+	{
+		return -1;
+	}
+	return 1;
+}
+
+int saveSubjectListToTextFile(const LIST subjectList, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	fprintf(fp, "%d\n", L_size(&subjectList));
+	int size = L_size(&subjectList);
+	NODE* tmp = subjectList.head.next;
+	for (int i = 0; i < size; i++)
+	{
+
+		//Subject* pSubject = (Subject*)L_getAt(&subjectList, i);
+		saveSubjectToTextFile((Subject*)tmp->key, fp);
+		tmp = tmp->next;
+	}
+	return 1;
+}
+
+int savePrivateMsgBoxArrToTextFile(const PrivateMsgBox* privateMsgBoxArr, const int privateMsgBoxArrSize, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	fprintf(fp, "%d\n", privateMsgBoxArrSize);
+	for (int i = 0; i < privateMsgBoxArrSize; i++)
+	{
+		savePrivateMsgBoxToTextFile(&privateMsgBoxArr[i], fp);
+	}
+	return 1;
+}
+
+int loadForumFromTextFile(Forum* pForum, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	if (loadSubjectListFromTextFile(&pForum->subjectList, fp) != 1)
+	{
+		return -1;
+	}
+	(void)fscanf(fp, "%d\n", &pForum->userArrSize);
+	for (int i = 0; i < pForum->userArrSize; i++)
+	{
+		User* user = (User*)malloc(sizeof(User));
+		if (user == NULL)
+		{
+			return -1;
+		}
+		if (loadUserFromTextFile(user, fp) != 1)
+		{
+			return -1;
+		}
+		pForum->userArr[i] = *user;
+	}
+	User* currentUser = (User*)malloc(sizeof(User));
+	if (currentUser == NULL)
+	{
+		return -1;
+	}
+	if (loadUserFromTextFile(currentUser, fp) != 1)
+	{
+		return -1;
+	}
+	pForum->currentUser = currentUser;
+	if (loadPrivateMsgBoxArrFromTextFile(pForum->privateMsgBoxArr, pForum->privateMsgBoxArrSize, fp) != 1)
+	{
+		return -1;
+	}
+	return 1;
+}
+
+int loadSubjectListFromTextFile(LIST* subjectList, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	int size;
+	(void)fscanf(fp, "%d\n", &size);
+	for (int i = 0; i < size; i++)
+	{
+		Subject* pSubject = (Subject*)malloc(sizeof(Subject));
+		if (pSubject == NULL)
+		{
+			return -1;
+		}
+		if (loadSubjectFromTextFile(pSubject, fp) != 1)
+		{
+			return -1;
+		}
+		L_insert(&subjectList->head, pSubject);
+	}
+	return 1;
+}
+
+int loadPrivateMsgBoxArrFromTextFile(PrivateMsgBox* privateMsgBoxArr, int privateMsgBoxArrSize, FILE* fp)
+{
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	(void)fscanf(fp, "%d\n", &privateMsgBoxArrSize);
+	for (int i = 0; i < privateMsgBoxArrSize; i++)
+	{
+		PrivateMsgBox* privateMsgBox = (PrivateMsgBox*)malloc(sizeof(PrivateMsgBox));
+		if (privateMsgBox == NULL)
+		{
+			return -1;
+		}
+		if (loadPrivateMsgBoxFromTextFile(privateMsgBox, fp) != 1)
+		{
+			return -1;
+		}
+		privateMsgBoxArr[i] = *privateMsgBox;
+	}
+	return 1;
 }
 
 void freeForumContent(Forum* pForum)

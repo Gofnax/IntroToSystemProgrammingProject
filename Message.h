@@ -19,5 +19,7 @@ void printMsg(const Message* pMsg);
 void printMsgIndexed(const Message* pMsg, int index);
 int saveMsgToBFile(FILE* fp, const Message* pMsg);
 int readMsgFromBFile(FILE* fp, Message* pMsg);
+int saveMessageToTextFile(const Message* message, FILE* fp);
+int loadMessageFromTextFile(Message* message, FILE* fp);
 void freeMessageContents(Message* pMsg);
 void freeMessage(Message* pMsg);
