@@ -42,9 +42,9 @@ void forumLoadMenu(Forum* pForum)
 		switch (userChoice)
 		{
 			case 1:
-				/*fp = fopen(SYSTEM_TEXT_FILE, "r");
+				fp = fopen(SYSTEM_TEXT_FILE, "r");
 				loadForumFromTextFile(pForum, fp);
-				fclose(fp);*/
+				fclose(fp);
 				break;
 			case 2:
 				fp = fopen(SYSTEM_BIN_FILE, "rb");

@@ -112,7 +112,7 @@ int saveTimeStampToTextFile(const TimeStamp* timeStamp, FILE* fp)
 
 int loadTimeStampFromTextFile(TimeStamp* timeStamp, FILE* fp)
 {
-	if (fp == NULL)
+	if (fp == NULL || timeStamp == NULL)
 	{
 		return -1;
 	}

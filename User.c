@@ -107,20 +107,17 @@ int saveUserToTextFile(const User* user, FILE* fp)
 
 int loadUserFromTextFile(User* user, FILE* fp)
 {
-	if (fp == NULL)
+	if (fp == NULL || user == NULL)
 	{
 		return -1;
 	}
-	(void)fscanf(fp, "%s\n", user->name);
+	(void)fscanf(fp, "%[^\n]%*c", user->name);
 	(void)fscanf(fp, "%s\n", user->password);
 	(void)fscanf(fp, "%d\n", &user->msgHistory.numOfMsgs);
 	for (int i = 0; i < user->msgHistory.numOfMsgs; i++)
 	{
 		Message* message = (Message*)malloc(sizeof(Message));
-		if (message == NULL)
-		{
-			return -1;
-		}
+		NULL_CHECK(message, -1);
 		if (loadMessageFromTextFile(message, fp) != 1)
 		{
 			return -1;

@@ -255,9 +255,9 @@ void forumMainMenu(Forum* pForum)
 				msgHistoryActionMenu(&pForum->currentUser->msgHistory);
 				break;
 			case 0:
-				/*fp = fopen(SYSTEM_TEXT_FILE, "w");
+				fp = fopen(SYSTEM_TEXT_FILE, "w");
 				saveForumToTextFile(pForum, fp);
-				fclose(fp);*/
+				fclose(fp);
 				fp = fopen(SYSTEM_BIN_FILE, "wb");
 				saveForumToBFile(fp, pForum);
 				fclose(fp);
@@ -490,7 +490,7 @@ int savePrivateMsgBoxArrToTextFile(const PrivateMsgBox* privateMsgBoxArr, const 
 
 int loadForumFromTextFile(Forum* pForum, FILE* fp)
 {
-	if (fp == NULL)
+	if (fp == NULL || pForum == NULL)
 	{
 		return -1;
 	}
@@ -502,10 +502,7 @@ int loadForumFromTextFile(Forum* pForum, FILE* fp)
 	for (int i = 0; i < pForum->userArrSize; i++)
 	{
 		User* user = (User*)malloc(sizeof(User));
-		if (user == NULL)
-		{
-			return -1;
-		}
+		NULL_CHECK(user, -1);
 		if (loadUserFromTextFile(user, fp) != 1)
 		{
 			return -1;
@@ -513,10 +510,7 @@ int loadForumFromTextFile(Forum* pForum, FILE* fp)
 		pForum->userArr[i] = *user;
 	}
 	User* currentUser = (User*)malloc(sizeof(User));
-	if (currentUser == NULL)
-	{
-		return -1;
-	}
+	NULL_CHECK(currentUser, -1);
 	if (loadUserFromTextFile(currentUser, fp) != 1)
 	{
 		return -1;
@@ -531,7 +525,7 @@ int loadForumFromTextFile(Forum* pForum, FILE* fp)
 
 int loadSubjectListFromTextFile(LIST* subjectList, FILE* fp)
 {
-	if (fp == NULL)
+	if (fp == NULL || subjectList == NULL)
 	{
 		return -1;
 	}
@@ -540,10 +534,7 @@ int loadSubjectListFromTextFile(LIST* subjectList, FILE* fp)
 	for (int i = 0; i < size; i++)
 	{
 		Subject* pSubject = (Subject*)malloc(sizeof(Subject));
-		if (pSubject == NULL)
-		{
-			return -1;
-		}
+		NULL_CHECK(pSubject, -1);
 		if (loadSubjectFromTextFile(pSubject, fp) != 1)
 		{
 			return -1;
@@ -555,7 +546,7 @@ int loadSubjectListFromTextFile(LIST* subjectList, FILE* fp)
 
 int loadPrivateMsgBoxArrFromTextFile(PrivateMsgBox* privateMsgBoxArr, int privateMsgBoxArrSize, FILE* fp)
 {
-	if (fp == NULL)
+	if (fp == NULL || privateMsgBoxArr == NULL)
 	{
 		return -1;
 	}
@@ -563,10 +554,7 @@ int loadPrivateMsgBoxArrFromTextFile(PrivateMsgBox* privateMsgBoxArr, int privat
 	for (int i = 0; i < privateMsgBoxArrSize; i++)
 	{
 		PrivateMsgBox* privateMsgBox = (PrivateMsgBox*)malloc(sizeof(PrivateMsgBox));
-		if (privateMsgBox == NULL)
-		{
-			return -1;
-		}
+		NULL_CHECK(privateMsgBox, -1);
 		if (loadPrivateMsgBoxFromTextFile(privateMsgBox, fp) != 1)
 		{
 			return -1;

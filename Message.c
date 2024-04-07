@@ -122,12 +122,12 @@ int saveMessageToTextFile(const Message* message, FILE* fp)
 
 int loadMessageFromTextFile(Message* message, FILE* fp)
 {
-	if (fp == NULL)
+	if (fp == NULL || message == NULL)
 	{
 		return -1;
 	}
-	(void)fscanf(fp, "%s\n", message->msgText);
-	(void)fscanf(fp, "%s\n", message->authorName);
+	(void)fscanf(fp, "%[^\n]%*c", message->msgText);
+	(void)fscanf(fp, "%[^\n]%*c", message->authorName);
 	(void)fscanf(fp, "%d\n", &message->likesCounter);
 	if (loadTimeStampFromTextFile(&message->timeWritten, fp) != 1)
 	{

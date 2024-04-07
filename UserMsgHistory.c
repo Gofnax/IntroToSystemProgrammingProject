@@ -267,6 +267,7 @@ int loadMsgHistoryFromTextFile(UserMsgHistory* pHistory, FILE* fp)
 	if (fscanf(fp, "%d\n", &pHistory->maxNumOfMsgs) != 1)
 		return -1;
 	pHistory->msgHistory = (Message**)calloc(pHistory->maxNumOfMsgs, sizeof(Message*));
+	NULL_CHECK(pHistory->msgHistory, -1);
 	pHistory->currentSort = eNoSort;
 	return 1;
 }

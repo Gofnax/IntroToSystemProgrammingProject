@@ -154,20 +154,17 @@ int savePrivateMsgBoxToTextFile(const PrivateMsgBox* privateMsgBox, FILE* fp)
 
 int loadPrivateMsgBoxFromTextFile(PrivateMsgBox* privateMsgBox, FILE* fp)
 {
-	if (fp == NULL)
+	if (fp == NULL || privateMsgBox == NULL)
 	{
 		return -1;
 	}
-	(void)fscanf(fp, "%s\n", privateMsgBox->user1->name);
-	(void)fscanf(fp, "%s\n", privateMsgBox->user2->name);
+	(void)fscanf(fp, "%[^\n]%*c", privateMsgBox->user1->name);
+	(void)fscanf(fp, "%[^\n]%*c", privateMsgBox->user2->name);
 	(void)fscanf(fp, "%d\n", &privateMsgBox->numOfMsgs);
 	for (int i = 0; i < privateMsgBox->numOfMsgs; i++)
 	{
 		Message* message = (Message*)malloc(sizeof(Message));
-		if (message == NULL)
-		{
-			return -1;
-		}
+		NULL_CHECK(message, -1);
 		if (loadMessageFromTextFile(message, fp) != 1)
 		{
 			return -1;
