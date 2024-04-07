@@ -38,8 +38,7 @@ void forumLoadMenu(Forum* pForum)
 	{
 		printf("How would you like to load the system?\n");
 		printf("(1 - Using Text Files | 2 - Using Binary Files | 3 - Clean System)\n");
-		(void)scanf("%d", &userChoice);
-		(void)gets(buff);	// buffer cleaning
+		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 		switch (userChoice)
 		{
 			case 1:

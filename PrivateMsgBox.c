@@ -34,7 +34,7 @@ void privateMsgBoxMenu(PrivateMsgBox* pPrivateBox, User* pUser)
 		switch (userChoice)
 		{
 			case 1:
-				printPrivateMsgs(pPrivateBox);
+				printPrivateMessagesArr(pPrivateBox);
 				break;
 			case 2:
 				writeMessage(pPrivateBox, pUser);
@@ -62,13 +62,23 @@ int writeMessage(PrivateMsgBox* pPrivateBox, User* pUser)
 	return 1;
 }
 
-void printPrivateMsgs(PrivateMsgBox* pPrivateBox)
+void printPrivateMsgs(const PrivateMsgBox* pPrivateBox)
 {
 	NULL_CHECK(pPrivateBox, );
 	for (int i = 0; i < pPrivateBox->numOfMsgs; i++)
 	{
 		printMsg(&pPrivateBox->messageArr[i]);
 	}
+}
+
+void printPrivateMessagesArr(const PrivateMsgBox* pPrivateBox)
+{
+	if (pPrivateBox == NULL)
+	{
+		return;
+	}
+	printf("Messages between %s and %s:\n", pPrivateBox->userName1, pPrivateBox->userName2);
+	generalFunction((void*)pPrivateBox->messageArr, pPrivateBox->numOfMsgs, sizeof(Message), (void(*)(void*))printMsg);
 }
 
 int savePrivateMsgBoxToBFile(FILE* fp, const PrivateMsgBox* pPrivateBox)
@@ -170,10 +180,7 @@ int loadPrivateMsgBoxFromTextFile(PrivateMsgBox* privateMsgBox, FILE* fp)
 void freePrivateMsgBoxContents(PrivateMsgBox* pPrivateBox)
 {
 	NULL_CHECK(pPrivateBox, );
-	for (int i = 0; i < pPrivateBox->numOfMsgs; i++)
-	{
-		freeMessageContents(&pPrivateBox->messageArr[i]);
-	}
+	generalFunction((void*)pPrivateBox->messageArr, pPrivateBox->numOfMsgs, sizeof(Message), (void(*)(void*))freeMessageContents);
 	free(pPrivateBox->userName1);
 	free(pPrivateBox->userName2);
 }

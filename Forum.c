@@ -23,8 +23,7 @@ int login(Forum* pForum)
 	NULL_CHECK(pTmpUser, -1);
 
 	printf("Enter your username: \n");
-	fgets(tempUserName, MAX_STR_LEN, stdin);
-	cleanNewlineChar(tempUserName);
+	USER_INPUT(tempUserName);
 	pTmpUser->name = (char*)malloc(USERNAME_LEN * sizeof(char));
 	NULL_CHECK(pTmpUser->name, -1);
 	strncpy(pTmpUser->name, tempUserName, USERNAME_LEN);
@@ -44,8 +43,7 @@ int login(Forum* pForum)
 	while (counter < 3 && tries>0)
 	{
 		printf("Enter your password:\n");
-		fgets(tempPW, MAX_STR_LEN, stdin);
-		cleanNewlineChar(tempPW);
+		USER_INPUT(tempPW);
 		if (isSamePassword(pTmpUser, tempPW) != 0)
 		{
 			printf("Incorrect password, try again: (%d tries left)\n", tries - 1);

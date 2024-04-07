@@ -34,6 +34,11 @@
 				(void)gets(buffer);\
 			}
 
+#define USER_INPUT(str){\
+				fgets(str, MAX_STR_LEN, stdin);\
+				cleanNewlineChar(str);\
+			}
+
 // new types
 typedef void* DATA;					// a type for data (easy to change)
 typedef enum {False, True} BOOL;	// a boolean type

@@ -133,7 +133,7 @@ Message* searchForMessage(const UserMsgHistory* pHistory)
 				sizeof(Message*), compareByLength);
 			break;
 		default:
-			printf("The search cannot be performed, array not sorted\n");
+			printf("The search cannot be performed, the messages are not sorted\n");
 			return NULL;
 	}
 	

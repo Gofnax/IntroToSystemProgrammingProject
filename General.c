@@ -76,7 +76,7 @@ char** splitCharsToWords(char* str, int* pCount, int* pTotalLength)
 	return wordsArray;
 }
 
-void generalArrayFunction(void* arr, int size, int typeSize, void (*func)(void*))
+void generalFunction(void* arr, int size, int typeSize, void (*func)(void*))
 {
 	char* current = (char*)arr;
 
