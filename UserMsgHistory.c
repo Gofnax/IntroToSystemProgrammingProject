@@ -1,7 +1,7 @@
 #include "UserMsgHistory.h"
 
 static const char* SortTypeStr[eNofSorts]
-		= { "Not Sorted", "Sorted by Time of Writing", "Sorted by Number of Likes", "Sorted by Length of Text"};
+		= { "Not Sorted", "Sorted by Time of Writing", "Sorted by Number of Likes", "Sorted by Alphabet"};
 
 void initMsgHistory(UserMsgHistory* pHistory)
 {
@@ -68,6 +68,20 @@ int compareByLength(const void* v1, const void* v2)
 	return (int)(strlen(pMsg1->msgText) - strlen(pMsg2->msgText));
 }
 
+int compareByAlphabet(const void* v1, const void* v2)
+{
+	const Message* pMsg1 = *(const Message**)v1;
+	const Message* pMsg2 = *(const Message**)v2;
+	return strcmp(pMsg1->msgText, pMsg2->msgText);
+}
+
+int compareByAlphabetPrefix(const void* v1, const void* v2)
+{
+	const Message* pMsg1 = *(const Message**)v1;
+	const Message* pMsg2 = *(const Message**)v2;
+	return strncmp(pMsg1->msgText, pMsg2->msgText, strlen(pMsg1->msgText));
+}
+
 void sortMsgs(UserMsgHistory* pHistory)
 {
 	NULL_CHECK(pHistory, );
@@ -92,7 +106,7 @@ void sortMsgs(UserMsgHistory* pHistory)
 			sortMessageHistory(pHistory, compareByLikes);
 			break;
 		case eSortByLength:
-			sortMessageHistory(pHistory, compareByLength);
+			sortMessageHistory(pHistory, compareByAlphabet);
 			break;
 	}
 	pHistory->currentSort = (eSortType)userChoice;
@@ -127,10 +141,10 @@ Message* searchForMessage(const UserMsgHistory* pHistory)
 				sizeof(Message*), compareByLikes);
 			break;
 		case 3:
-			searchMsgByLengthHelper(&tmpMsg);
+			searchMsgByAlphabetHelper(&tmpMsg);
 			pTmpMsg = &tmpMsg;
 			res = (Message**)bsearch(&pTmpMsg, pHistory->msgHistory, pHistory->numOfMsgs,
-				sizeof(Message*), compareByLength);
+				sizeof(Message*), compareByAlphabetPrefix);
 			break;
 		default:
 			printf("The search cannot be performed, the messages are not sorted\n");
@@ -193,6 +207,13 @@ void searchMsgByLengthHelper(Message* pMsg)
 		pMsg->msgText[i] = 'a';
 	}
 	pMsg->msgText[len] = '\0';
+}
+
+void searchMsgByAlphabetHelper(Message* pMsg)
+{
+	NULL_CHECK(pMsg, );
+	printf("Enter the beginning of the message:\n");
+	createMsg(pMsg, "tmp");
 }
 
 int saveMsgHistoryToBFile(FILE* fp, const UserMsgHistory* pHistory)
