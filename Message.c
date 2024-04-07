@@ -2,12 +2,12 @@
 
 int createMsg(Message* pMsg, char* authorName)
 {
+	NULL_CHECK(pMsg, -1);
 	char buffer[10] = { 0 };
 	pMsg->likesCounter = 0;
 	int len = (int)strlen(authorName) + 1;
 	pMsg->authorName = (char*)malloc(len * sizeof(char));
-	if (pMsg->authorName == NULL)
-		return -1;
+	NULL_CHECK(pMsg->authorName, NULL);
 	strncpy(pMsg->authorName, authorName, len);
 
 	pMsg->msgText[MAX_MSG_LEN - 1] = '\0';
@@ -25,6 +25,7 @@ int createMsg(Message* pMsg, char* authorName)
 
 void printMsg(const Message* pMsg)
 {
+	NULL_CHECK(pMsg, );
 	printf("----------------------------------------\n");	// 40 '-' for visuals
 	printf("Author: %s\n%s\n", pMsg->authorName, getTimeString(&pMsg->timeWritten));
 	printf("--------------------\n");	// 20 '-' for visuals
@@ -36,6 +37,7 @@ void printMsg(const Message* pMsg)
 
 void printMsgIndexed(const Message* pMsg, int index)
 {
+	NULL_CHECK(pMsg, );
 	printf("----------------------------------------\n");	// 40 '-' for visuals
 	printf("%d) Author: %s\n%s\n", index, pMsg->authorName, getTimeString(&pMsg->timeWritten));
 	printf("--------------------\n");	// 20 '-' for visuals
@@ -136,13 +138,13 @@ int loadMessageFromTextFile(Message* message, FILE* fp)
 
 void freeMessageContents(Message* pMsg)
 {
-	if (pMsg == NULL)
-		return;
+	NULL_CHECK(pMsg, );
 	free(pMsg->authorName);
 }
 
 void freeMessage(Message* pMsg)
 {
+	NULL_CHECK(pMsg, );
 	freeMessageContents(pMsg);
 	free(pMsg);
 }

@@ -2,37 +2,9 @@
 
 int initUser(User* pUser)
 {
+	NULL_CHECK(pUser, -1);
 	initUserName(pUser);
 	initUserPassword(pUser);
-	/*pUser->name = (char*)malloc(USERNAME_LEN * sizeof(char));
-	if (pUser->name == NULL)
-		return -1;
-
-	printf("Enter username: ");
-	char maxCharMsg[20];
-	do
-	{
-		snprintf(maxCharMsg, 20, "(max %d chars)\n", USERNAME_LEN - 1);
-		pUser->name = getStrExactName(maxCharMsg);
-	} while (strlen(pUser->name) > USERNAME_LEN - 1);
-
-	char tmpPass1[MAX_STR_LEN];
-	char tmpPass2[MAX_STR_LEN];
-	do
-	{
-		printf("Enter password: (max %d chars)\n", PW_LEN - 1);
-		fgets(tmpPass1, MAX_STR_LEN, stdin);
-		cleanNewlineChar(tmpPass1);
-		printf("Enter it again for verification:\n");
-		fgets(tmpPass2, MAX_STR_LEN, stdin);
-		cleanNewlineChar(tmpPass2);
-	} while (strlen(tmpPass1) > PW_LEN - 1 || strcmp(tmpPass1, tmpPass2));
-	strncpy(pUser->password, tmpPass1, PW_LEN);
-
-	initMsgHistory(&pUser->msgHistory);
-
-	printf("User registered successfully.\n");
-	return 1;*/
 	return 1;
 }
 
@@ -78,8 +50,7 @@ int initUserPassword(User* pUser)
 
 int isSamePassword(User* pUser, char* pass)
 {
-	if (pUser == NULL)
-		return -1;
+	NULL_CHECK(pUser, -1);
 	return strcmp(pUser->password, pass);
 }
 
@@ -161,14 +132,14 @@ int loadUserFromTextFile(User* user, FILE* fp)
 
 void freeUserContents(User* pUser)
 {
-	if (pUser == NULL)
-		return;
+	NULL_CHECK(pUser, );
 	free(pUser->name);
 	freeMsgHistoryContents(&pUser->msgHistory);
 }
 
 void freeUser(User* pUser)
 {
+	NULL_CHECK(pUser, );
 	freeUserContents(pUser);
 	free(pUser);
 }

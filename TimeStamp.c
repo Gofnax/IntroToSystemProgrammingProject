@@ -11,10 +11,8 @@ char* getTimeString(const TimeStamp* pTime)
 	formatTimeElement(minute, 3, pTime->minute);
 	int len = (int)(strlen(day) + strlen(month) + strlen(year) + strlen(hour) + strlen(minute) + strlen("// :"));
 	char* timeString = (char*)calloc(len + 1, sizeof(char));
-	if (timeString == NULL)
-	{
-		return NULL;
-	}
+	NULL_CHECK(timeString, NULL);
+
 	snprintf(timeString, len + 1, "%s/%s/%s %s:%s", day, month, year, hour, minute);
 	return timeString;
 }
@@ -33,6 +31,7 @@ void formatTimeElement(char* charElement, int len, int numElement)
 
 int	initTime(TimeStamp* pTime)
 {
+	NULL_CHECK(pTime, -1);
 	time_t currTimeTmp = time(&currTimeTmp);
 	struct tm* currTime = localtime(&currTimeTmp);
 	pTime->day = currTime->tm_mday;
@@ -45,6 +44,8 @@ int	initTime(TimeStamp* pTime)
 
 int compareTime(const TimeStamp* pTime1, const TimeStamp* pTime2)
 {
+	if (pTime1 == NULL || pTime2 == NULL)
+		return -2;
 	if (pTime1->year != pTime2->year)
 		return pTime1->year - pTime2->year;
 	if (pTime1->month != pTime2->month)

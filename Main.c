@@ -23,10 +23,6 @@ void testForumBinaryFile();
 
 int main(void)
 {
-	TimeStamp time;
-	initTime(&time);
-	printf("%s\n", getTimeString(&time));
-
 	Forum forum1;
 	forumLoadMenu(&forum1);
 	forumMainMenu(&forum1);

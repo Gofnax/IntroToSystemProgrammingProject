@@ -3,17 +3,13 @@
 
 int initThread(Thread* pThread, User* currentUser)
 {
-	pThread->title = (char*)malloc(sizeof(char) * MAX_TITLE_NAME);
-	if (pThread->title == NULL)
-	{
+	if (pThread == NULL || currentUser == NULL)
 		return -1;
-	}
+	pThread->title = (char*)malloc(sizeof(char) * MAX_TITLE_NAME);
+	NULL_CHECK(pThread->title, -1);
 	(void)createThreadTitle(pThread);
 	pThread->messageArr = (Message*)malloc(sizeof(Message) * 1);
-	if (pThread->messageArr == NULL)
-	{
-		return -1;
-	}
+	NULL_CHECK(pThread->messageArr, -1);
 	pThread->messageArrSize = 0;
 	if (createMsg(&pThread->primaryMsg, currentUser->name) != 1)
 	{
@@ -54,10 +50,7 @@ void printThread(const Thread* pThread)
 int addMessage(Thread* pThread, User* pCurrentUser)
 {
 	Message* temp = (Message*)realloc(pThread->messageArr, sizeof(Message) * (pThread->messageArrSize + 1));
-	if (temp == NULL)
-	{
-		return -1;
-	}
+	NULL_CHECK(temp, -1);
 	pThread->messageArr = temp;
 	if (createMsg(&pThread->messageArr[pThread->messageArrSize], pCurrentUser->name) != 1)
 	{
@@ -218,8 +211,7 @@ int loadThreadFromTextFile(Thread* pThread, FILE* fp)
 
 void freeThreadContent(Thread* pThread)
 {
-	if (pThread == NULL)
-		return;
+	NULL_CHECK(pThread, );
 	free(pThread->title);
 	freeMessageContents(&pThread->primaryMsg);
 	for (int i = 0; i < pThread->messageArrSize; i++)
@@ -230,6 +222,7 @@ void freeThreadContent(Thread* pThread)
 
 void freeThread(Thread* pThread)
 {
+	NULL_CHECK(pThread, );
 	freeThreadContent(pThread);
 	free(pThread);
 }

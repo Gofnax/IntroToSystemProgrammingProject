@@ -24,8 +24,7 @@ int initPrivateMsgBox(PrivateMsgBox* pPrivateBox, User* pUser1, User* pUser2)
 
 void privateMsgBoxMenu(PrivateMsgBox* pPrivateBox, User* pUser)
 {
-	if (pPrivateBox == NULL)
-		return;
+	NULL_CHECK(pPrivateBox, );
 	int userChoice;
 	char buff[2] = { 0 };
 	do
@@ -55,8 +54,7 @@ int writeMessage(PrivateMsgBox* pPrivateBox, User* pUser)
 	if (pPrivateBox == NULL || pUser == NULL)
 		return -1;
 	Message* tmpArr = (Message*)realloc(pPrivateBox->messageArr, (pPrivateBox->numOfMsgs + 1) * sizeof(Message));
-	if (tmpArr == NULL)
-		return -1;
+	NULL_CHECK(tmpArr, -1);
 	pPrivateBox->messageArr = tmpArr;
 	int index = pPrivateBox->numOfMsgs;
 	Message* destMsg = pPrivateBox->messageArr + index;
@@ -67,8 +65,7 @@ int writeMessage(PrivateMsgBox* pPrivateBox, User* pUser)
 
 void printPrivateMsgs(PrivateMsgBox* pPrivateBox)
 {
-	if (pPrivateBox == NULL)
-		return;
+	NULL_CHECK(pPrivateBox, );
 	for (int i = 0; i < pPrivateBox->numOfMsgs; i++)
 	{
 		printMsg(&pPrivateBox->messageArr[i]);
@@ -107,15 +104,13 @@ int readPrivateMsgBoxFromBFile(FILE* fp, PrivateMsgBox* pPrivateBox)
 	if (fread(&len, sizeof(int), 1, fp) != 1)
 		return -1;
 	pPrivateBox->userName1 = (char*)malloc(len * sizeof(char));
-	if (pPrivateBox->userName1 == NULL)
-		return -1;
+	NULL_CHECK(pPrivateBox->userName1, -1);
 	if (fread(pPrivateBox->userName1, sizeof(char), len, fp) != len)
 		return -1;
 	if (fread(&len, sizeof(int), 1, fp) != 1)
 		return -1;
 	pPrivateBox->userName2 = (char*)malloc(len * sizeof(char));
-	if (pPrivateBox->userName2 == NULL)
-		return -1;
+	NULL_CHECK(pPrivateBox->userName2, -1);
 	if (fread(pPrivateBox->userName2, sizeof(char), len, fp) != len)
 		return -1;
 	if (fread(&pPrivateBox->numOfMsgs, sizeof(int), 1, fp) != 1)
@@ -175,8 +170,7 @@ int loadPrivateMsgBoxFromTextFile(PrivateMsgBox* privateMsgBox, FILE* fp)
 
 void freePrivateMsgBoxContents(PrivateMsgBox* pPrivateBox)
 {
-	if (pPrivateBox == NULL)
-		return;
+	NULL_CHECK(pPrivateBox, );
 	for (int i = 0; i < pPrivateBox->numOfMsgs; i++)
 	{
 		freeMessageContents(&pPrivateBox->messageArr[i]);
@@ -187,6 +181,7 @@ void freePrivateMsgBoxContents(PrivateMsgBox* pPrivateBox)
 
 void freePrivateMsgBox(PrivateMsgBox* pPrivateBox)
 {
+	NULL_CHECK(pPrivateBox, );
 	freePrivateMsgBoxContents(pPrivateBox);
 	free(pPrivateBox);
 }

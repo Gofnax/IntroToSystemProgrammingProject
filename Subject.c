@@ -2,25 +2,19 @@
 
 int initSubject(Subject* pSubject)
 {
+	NULL_CHECK(pSubject, -1);
 	pSubject->title = (char*)malloc(sizeof(char) * MAX_TITLE_NAME);
-	if (pSubject->title == NULL)
-	{
-		return -1;
-	}
+	NULL_CHECK(pSubject->title, -1);
 	createSubjectTitle(pSubject);
 	pSubject->threadArr = (Thread**)malloc(sizeof(Thread*) * 1);
-	if (pSubject->threadArr == NULL)
-	{
-		return -1;
-	}
+	NULL_CHECK(pSubject->threadArr, -1);
 	pSubject->threadArrSize = 0;
 	return 1;
 }
 
 int createSubjectTitle(Subject* pSubject)
 {
-	if (pSubject == NULL)
-		return -1;
+	NULL_CHECK(pSubject, -1);
 	char buffer[10] = { 0 };
 	pSubject->title[MAX_TITLE_NAME - 1] = '\0';
 	printf("Enter the subject: (max %d chars)\n", MAX_TITLE_NAME - 1);
@@ -36,6 +30,7 @@ int createSubjectTitle(Subject* pSubject)
 
 void printThreadArr(Thread** threadArr, int threadArrSize)
 {
+	NULL_CHECK(threadArr, );
 	for (int i = 0; i < threadArrSize; i++)
 	{
 		printf("%d. %s\n", i + 1, threadArr[i]->title);
@@ -66,10 +61,7 @@ void chooseThread(Subject* pSubject, User* pCurrUser)
 int  addThread(Subject* pSubject, Thread* pThread)
 {
 	Thread** temp = (Thread**)realloc(pSubject->threadArr, sizeof(Thread*) * (pSubject->threadArrSize + 1));
-	if (temp == NULL)
-	{
-		return -1;
-	}
+	NULL_CHECK(temp, -1);
 	pSubject->threadArr = temp;
 	pSubject->threadArr[pSubject->threadArrSize] = pThread;
 	pSubject->threadArrSize++;
@@ -78,6 +70,7 @@ int  addThread(Subject* pSubject, Thread* pThread)
 
 void printSubject(const Subject* pSubject)
 {
+	NULL_CHECK(pSubject, );
 	printf("Subject: %s\n", pSubject->title);
 	printf("Threads:\n");
 	printThreadArr(pSubject->threadArr, pSubject->threadArrSize);
@@ -85,6 +78,7 @@ void printSubject(const Subject* pSubject)
 
 void printSubjectTitle(const Subject* pSubject)
 {
+	NULL_CHECK(pSubject, );
 	printf("%s\n", pSubject->title);
 }
 
@@ -111,8 +105,7 @@ void subjectActionsMenu(Subject* pSubject, User* pCurrUser)
 			case 2:
 				{
 					Thread* pNewThread = (Thread*)malloc(1 * sizeof(Thread));
-					if (pNewThread == NULL)
-						return;
+					NULL_CHECK(pNewThread, );
 					initThread(pNewThread, pCurrUser);
 					addThread(pSubject, pNewThread);
 				}
@@ -220,6 +213,7 @@ int loadSubjectFromTextFile(Subject* pSubject, FILE* fp)
 
 void freeSubjectContent(Subject* pSubject)
 {
+	NULL_CHECK(pSubject, );
 	free(pSubject->title);
 	for (int i = 0; i < pSubject->threadArrSize; i++)
 	{
@@ -230,6 +224,7 @@ void freeSubjectContent(Subject* pSubject)
 
 void freeSubject(Subject* pSubject)
 {
+	NULL_CHECK(pSubject, );
 	freeSubjectContent(pSubject);
 	free(pSubject);
 }

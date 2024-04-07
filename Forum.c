@@ -2,35 +2,31 @@
 
 int initForum(Forum* pForum)
 {
+	NULL_CHECK(pForum, -1);
 	pForum->userArr = (User*)malloc(sizeof(User) * 1);
-	if (pForum->userArr == NULL)
-	{
-		return -1;
-	}
+	NULL_CHECK(pForum->userArr, -1);
 	pForum->userArrSize = 0;
 	pForum->currentUser = NULL;
 	L_init(&pForum->subjectList);
 	pForum->privateMsgBoxArr = (PrivateMsgBox*)malloc(1 * sizeof(PrivateMsgBox));
-	if (pForum->privateMsgBoxArr == NULL)
-		return -1;
+	NULL_CHECK(pForum->privateMsgBoxArr, -1);
 	pForum->privateMsgBoxArrSize = 0;
 	return 1;
 }
 
 int login(Forum* pForum)
 {
+	NULL_CHECK(pForum, -1);
 	char tempUserName[MAX_STR_LEN];
 	char tempPW[MAX_STR_LEN];
 	User* pTmpUser = (User*)malloc(1 * sizeof(User));
-	if (pTmpUser == NULL)
-		return -1;
+	NULL_CHECK(pTmpUser, -1);
 
 	printf("Enter your username: \n");
 	fgets(tempUserName, MAX_STR_LEN, stdin);
 	cleanNewlineChar(tempUserName);
 	pTmpUser->name = (char*)malloc(USERNAME_LEN * sizeof(char));
-	if (pTmpUser->name == NULL)
-		return -1;
+	NULL_CHECK(pTmpUser->name, -1);
 	strncpy(pTmpUser->name, tempUserName, USERNAME_LEN);
 
 	int userIndex = isUserInArr(pTmpUser, pForum->userArr, pForum->userArrSize);
@@ -71,6 +67,7 @@ int login(Forum* pForum)
 
 int registerUser(Forum* pForum)
 {
+	NULL_CHECK(pForum, -1);
 	User* pTmpUser = (User*)malloc(1 * sizeof(User));
 	NULL_CHECK(pTmpUser, -1);
 
@@ -93,6 +90,7 @@ int registerUser(Forum* pForum)
 
 void displayMsgHistory(User* user)
 {
+	NULL_CHECK(user, );
 	printf("Displaying message history for %s\n", user->name);
 	for (int i = 0; i < user->msgHistory.numOfMsgs; i++)
 	{
@@ -102,6 +100,7 @@ void displayMsgHistory(User* user)
 
 void displaySubjectList(LIST* pSubjectList)
 {
+	NULL_CHECK(pSubjectList, );
 	L_print(pSubjectList, printSubjectTitle);
 }
 
@@ -160,11 +159,9 @@ int chooseSubject(LIST* pSubjectList, User* pCurrUser)
 
 int addSubject(LIST* pSubjectList)
 {
+	NULL_CHECK(pSubjectList, -1);
 	Subject* pSubject = (Subject*)malloc(sizeof(Subject));
-	if (pSubject == NULL)
-	{
-		return -1;
-	}
+	NULL_CHECK(pSubject, -1);
 	if (initSubject(pSubject) != 1)
 	{
 		return -1;
@@ -175,6 +172,8 @@ int addSubject(LIST* pSubjectList)
 
 int isUserInArr(User* user, User* userArr, int userArrSize)
 {
+	if (user == NULL || userArr == NULL)
+		return -1;
 	for (int i = 0; i < userArrSize; i++)
 	{
 		if (strcmp(user->name, userArr[i].name) == 0)
@@ -187,6 +186,8 @@ int isUserInArr(User* user, User* userArr, int userArrSize)
 
 int addUser(User* user, Forum* pForum)
 {
+	if (user == NULL || pForum == NULL)
+		return -1;
 	User* temp = (User*)realloc(pForum->userArr, sizeof(User) * (pForum->userArrSize + 1));
 	if (temp == NULL)
 	{
@@ -195,7 +196,6 @@ int addUser(User* user, Forum* pForum)
 	pForum->userArr = temp;
 	memcpy(&pForum->userArr[pForum->userArrSize], user, sizeof(User));
 	pForum->userArrSize++;
-	//printf("User %s added to forum\n", user->name);
 	return 1;
 }
 
@@ -225,6 +225,8 @@ void startPrivateConversation(User* pCurrentUser, User* pUser, Forum* pForum)
 
 int doesMsgBoxExist(User* pCurrentUser, User* pUser, PrivateMsgBox* privateMsgBoxArr, int privateMsgBoxArrSize)
 {
+	if (pCurrentUser == NULL || pUser == NULL || privateMsgBoxArr == NULL)
+		return -1;
 	for (int i = 0; i < privateMsgBoxArrSize; i++)
 	{
 		if (((strcmp(pCurrentUser->name, privateMsgBoxArr[i].user1->name) == 0 && strcmp(pUser->name, privateMsgBoxArr[i].user2->name) == 0)) ||
@@ -267,6 +269,7 @@ void forumMainMenu(Forum* pForum)
 				fp = fopen(SYSTEM_BIN_FILE, "wb");
 				saveForumToBFile(fp, pForum);
 				fclose(fp);
+				freeForumContent(pForum);
 				break;
 			default:
 				printf("Unknown option selected.\n");
@@ -276,6 +279,8 @@ void forumMainMenu(Forum* pForum)
 
 int choosePrivateChatPartner(User* pCurrentUser, Forum* pForum)
 {
+	if (pCurrentUser == NULL || pForum == NULL)
+		return -1;
 	User* pTmpUser = (User*)malloc(1 * sizeof(User));
 	NULL_CHECK(pTmpUser, -1);
 
@@ -582,8 +587,7 @@ int loadPrivateMsgBoxArrFromTextFile(PrivateMsgBox* privateMsgBoxArr, int privat
 
 void freeForumContent(Forum* pForum)
 {
-	if (pForum == NULL)
-		return;
+	NULL_CHECK(pForum, );
 	for (int i = 0; i < pForum->userArrSize; i++)
 	{
 		freeUserContents(&pForum->userArr[i]);
@@ -599,6 +603,7 @@ void freeForumContent(Forum* pForum)
 
 void freeForum(Forum* pForum)
 {
+	NULL_CHECK(pForum, );
 	freeForumContent(pForum);
 	free(pForum);
 }

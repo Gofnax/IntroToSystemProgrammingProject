@@ -5,9 +5,9 @@ static const char* SortTypeStr[eNofSorts]
 
 void initMsgHistory(UserMsgHistory* pHistory)
 {
+	NULL_CHECK(pHistory, );
 	pHistory->msgHistory = (Message**)calloc(HISTORY_GROWTH_SIZE, sizeof(Message*));
-	if (pHistory->msgHistory == NULL)
-		return;
+	NULL_CHECK(pHistory->msgHistory, );
 	pHistory->numOfMsgs = 0;
 	pHistory->maxNumOfMsgs = HISTORY_GROWTH_SIZE;
 	pHistory->currentSort = eNoSort;
@@ -20,8 +20,7 @@ int documentMsg(UserMsgHistory* pHistory, Message* pMsg)
 	if (pHistory->numOfMsgs == pHistory->maxNumOfMsgs)
 	{
 		Message** tmpArr = (Message**)realloc(pHistory->msgHistory, (pHistory->numOfMsgs + HISTORY_GROWTH_SIZE) * sizeof(Message*));
-		if (tmpArr == NULL)
-			return -1;
+		NULL_CHECK(tmpArr, -1);
 		pHistory->msgHistory = tmpArr;
 		pHistory->maxNumOfMsgs += HISTORY_GROWTH_SIZE;
 	}
@@ -41,8 +40,7 @@ int documentMsgFromFile(UserMsgHistory* pHistory, Message* pMsg, int index)
 
 void printMsgHistory(const UserMsgHistory* pHistory)
 {
-	if (pHistory == NULL)
-		return;
+	NULL_CHECK(pHistory, );
 	for (int i = 0; i < pHistory->numOfMsgs; i++)
 	{
 		printMsg(pHistory->msgHistory[i]);
@@ -72,8 +70,7 @@ int compareByLength(const void* v1, const void* v2)
 
 void sortMsgs(UserMsgHistory* pHistory)
 {
-	if (pHistory == NULL)
-		return;
+	NULL_CHECK(pHistory, );
 	int userChoice;
 	do
 	{
@@ -110,8 +107,7 @@ void sortMessageHistory(UserMsgHistory* pHistory, int (*compare)(const void*, co
 
 Message* searchForMessage(const UserMsgHistory* pHistory)
 {
-	if (pHistory == NULL)
-		return NULL;
+	NULL_CHECK(pHistory, NULL);
 	Message tmpMsg;
 	Message* pTmpMsg;
 	Message** res = NULL;
@@ -224,6 +220,7 @@ int readMsgHistoryFromBFile(FILE* fp, UserMsgHistory* pHistory)
 	if (fread(&pHistory->maxNumOfMsgs, sizeof(int), 1, fp) != 1)
 		return -1;
 	pHistory->msgHistory = (Message**)calloc(pHistory->maxNumOfMsgs, sizeof(Message*));
+	NULL_CHECK(pHistory->msgHistory, -1);
 	pHistory->currentSort = eNoSort;
 	return 1;
 }
@@ -282,13 +279,13 @@ int loadMsgHistoryFromTextFile(UserMsgHistory* pHistory, FILE* fp)
 
 void freeMsgHistoryContents(UserMsgHistory* pHistory)
 {
-	if (pHistory == NULL)
-		return;
+	NULL_CHECK(pHistory, );
 	free(pHistory->msgHistory);	// the messages themselves aren't stored in UserMsgHistory, but in their threads
 }
 
 void freeMsgHistory(UserMsgHistory* pHistory)
 {
+	NULL_CHECK(pHistory, );
 	freeMsgHistoryContents(pHistory);
 	free(pHistory);
 }
