@@ -61,13 +61,6 @@ int	compareByLikes(const void* v1, const void* v2)
 	return pMsg1->likesCounter - pMsg2->likesCounter;
 }
 
-int compareByLength(const void* v1, const void* v2)
-{
-	const Message* pMsg1 = *(const Message**)v1;
-	const Message* pMsg2 = *(const Message**)v2;
-	return (int)(strlen(pMsg1->msgText) - strlen(pMsg2->msgText));
-}
-
 int compareByAlphabet(const void* v1, const void* v2)
 {
 	const Message* pMsg1 = *(const Message**)v1;
@@ -188,25 +181,6 @@ void searchMsgByLikesHelper(Message* pMsg)
 	printf("Enter the number of likes the message has:\n");
 	NUM_INPUT_CLEAN_BUFF(likesInput, buff);
 	pMsg->likesCounter = likesInput;
-}
-
-void searchMsgByLengthHelper(Message* pMsg)
-{
-	NULL_CHECK(pMsg, );
-	int len = 0;
-	char buff[2] = { 0 };
-	printf("Enter the length of the message:\n");
-	NUM_INPUT_CLEAN_BUFF(len, buff);
-	if (len < 1 || len > 254)
-	{
-		printf("No message with such length.\n");
-		return;
-	}
-	for (int i = 0; i < len; i++)
-	{
-		pMsg->msgText[i] = 'a';
-	}
-	pMsg->msgText[len] = '\0';
 }
 
 void searchMsgByAlphabetHelper(Message* pMsg)

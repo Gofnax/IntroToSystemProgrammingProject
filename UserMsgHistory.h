@@ -24,7 +24,6 @@ int documentMsgFromFile(UserMsgHistory* pHistory, Message* pMsg, int index);
 void printMsgHistory(const UserMsgHistory* pHistory);
 int	compareByTime(const void* v1, const void* v2);
 int	compareByLikes(const void* v1, const void* v2);
-int compareByLength(const void* v1, const void* v2);
 int compareByAlphabet(const void* v1, const void* v2);
 int compareByAlphabetPrefix(const void* v1, const void* v2);
 void sortMsgs(UserMsgHistory* pHistory);
@@ -32,7 +31,6 @@ void sortMessageHistory(UserMsgHistory* pHistory, int (*compare)(const void*, co
 Message* searchForMessage(const UserMsgHistory* pHistory);
 void searchMsgByTimeHelper(Message* pMsg);
 void searchMsgByLikesHelper(Message* pMsg);
-void searchMsgByLengthHelper(Message* pMsg);
 void searchMsgByAlphabetHelper(Message* pMsg);
 int saveMsgHistoryToBFile(FILE* fp, const UserMsgHistory* pHistory);
 int readMsgHistoryFromBFile(FILE* fp, UserMsgHistory* pHistory);
