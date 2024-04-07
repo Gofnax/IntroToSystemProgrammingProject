@@ -120,6 +120,8 @@ int readPrivateMsgBoxFromBFile(FILE* fp, PrivateMsgBox* pPrivateBox)
 		return -1;
 	if (fread(&pPrivateBox->numOfMsgs, sizeof(int), 1, fp) != 1)
 		return -1;
+	pPrivateBox->messageArr = (Message*)malloc((pPrivateBox->numOfMsgs) * sizeof(Message));
+	NULL_CHECK(pPrivateBox->messageArr, -1);
 	for (int i = 0; i < pPrivateBox->numOfMsgs; i++)
 	{
 		if(readMsgFromBFile(fp, &pPrivateBox->messageArr[i]) == -1)

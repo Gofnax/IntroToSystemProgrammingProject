@@ -195,7 +195,7 @@ int addUser(User* user, Forum* pForum)
 	pForum->userArr = temp;
 	memcpy(&pForum->userArr[pForum->userArrSize], user, sizeof(User));
 	pForum->userArrSize++;
-	printf("User %s added to forum\n", user->name);
+	//printf("User %s added to forum\n", user->name);
 	return 1;
 }
 
@@ -264,8 +264,9 @@ void forumMainMenu(Forum* pForum)
 				/*fp = fopen(SYSTEM_TEXT_FILE, "w");
 				saveForumToTextFile(pForum, fp);
 				fclose(fp);*/
-				//fp = fopen(SYSTEM_BIN_FILE, "wb");
-				//saveForumToBFile(fp, pForum);
+				fp = fopen(SYSTEM_BIN_FILE, "wb");
+				saveForumToBFile(fp, pForum);
+				fclose(fp);
 				break;
 			default:
 				printf("Unknown option selected.\n");

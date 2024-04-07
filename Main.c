@@ -16,7 +16,6 @@ void testThread();
 void testSubject();
 void testTimeStampBinaryFile();
 void testMessageBinaryFile();
-void testUserBinaryFile();
 void testThreadBinaryFile();
 void testSubjectBinaryFilr();
 void testForumBinaryFile();
@@ -28,9 +27,9 @@ int main(void)
 	initTime(&time);
 	printf("%s\n", getTimeString(&time));
 
-	/*Forum forum1;
+	Forum forum1;
 	forumLoadMenu(&forum1);
-	forumMainMenu(&forum1);*/
+	forumMainMenu(&forum1);
 
 	//testPrivateMsgBox();
 	//testTimeStampBinaryFile();
@@ -40,7 +39,7 @@ int main(void)
 	//testSubject();
 	//testThreadBinaryFile();
 	//testSubjectBinaryFilr();
-	testForumBinaryFile();
+	//testForumBinaryFile();
 }
 
 void forumLoadMenu(Forum* pForum)
@@ -58,11 +57,14 @@ void forumLoadMenu(Forum* pForum)
 		switch (userChoice)
 		{
 			case 1:
-				fp = fopen(SYSTEM_TEXT_FILE, "r");
+				/*fp = fopen(SYSTEM_TEXT_FILE, "r");
 				loadForumFromTextFile(pForum, fp);
-				fclose(fp);
+				fclose(fp);*/
 				break;
 			case 2:
+				fp = fopen(SYSTEM_BIN_FILE, "rb");
+				readForumFromBFile(fp, pForum);
+				fclose(fp);
 				break;
 			case 3:
 				initForum(pForum);
@@ -193,18 +195,6 @@ void testThreadBinaryFile()
 	printThread(&thread2);
 }
 
-void testUserMsgHistoryBinaryFile()
-{
-	User user1;
-	Thread thread1;
-	printf("Register user:\n");
-	initUser(&user1);
-	initThread(&thread1, &user1);
-	threadActionsMenu(&thread1, &user1);
-	FILE* fp = fopen("userHistoryTest.bin", "wb");
-	printf("Saving the ");
-}
-
 void testSubjectBinaryFilr()
 {
 	FILE* fp = fopen("userTest.bin", "rb");
@@ -243,6 +233,7 @@ void testForumBinaryFile()
 	strncpy(user2.name, "Username2", 10);
 	strncpy(user2.password, "123", 4);
 	readUserFromBFile(fp, &user1);
+	user1.msgHistory.numOfMsgs = 2;
 	fclose(fp);
 	fp = fopen("threadTest.bin", "rb");
 	Thread thread1;
