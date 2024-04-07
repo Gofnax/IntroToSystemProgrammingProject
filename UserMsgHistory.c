@@ -144,6 +144,7 @@ Message* searchForMessage(const UserMsgHistory* pHistory)
 	else
 	{
 		printf("Message found:\n");
+		printMsg(*res);
 		return (*res);
 	}
 }
