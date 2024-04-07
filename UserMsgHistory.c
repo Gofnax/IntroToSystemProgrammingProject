@@ -31,6 +31,14 @@ int documentMsg(UserMsgHistory* pHistory, Message* pMsg)
 	return 1;
 }
 
+int documentMsgFromFile(UserMsgHistory* pHistory, Message* pMsg, int index)
+{
+	if (pHistory == NULL || pMsg == NULL)
+		return -1;
+	pHistory->msgHistory[index] = pMsg;
+	return 1;
+}
+
 void printMsgHistory(const UserMsgHistory* pHistory)
 {
 	if (pHistory == NULL)

@@ -20,6 +20,7 @@ typedef struct
 
 void initMsgHistory(UserMsgHistory* pHistory);
 int documentMsg(UserMsgHistory* pHistory, Message* pMsg);
+int documentMsgFromFile(UserMsgHistory* pHistory, Message* pMsg, int index);
 void printMsgHistory(const UserMsgHistory* pHistory);
 int	compareByTime(const void* v1, const void* v2);
 int	compareByLikes(const void* v1, const void* v2);

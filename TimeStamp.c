@@ -2,6 +2,7 @@
 
 char* getTimeString(const TimeStamp* pTime)
 {
+	NULL_CHECK(pTime, NULL);
 	char day[3] = { 0 }, month[3] = { 0 }, year[5] = { 0 }, hour[3] = { 0 }, minute[3] = { 0 };
 	formatTimeElement(day, 3, pTime->day);
 	formatTimeElement(month, 3, pTime->month);

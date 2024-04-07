@@ -4,6 +4,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
+#include "def.h"
 
 typedef unsigned char BYTE;
 

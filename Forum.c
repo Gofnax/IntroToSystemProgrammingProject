@@ -328,26 +328,26 @@ void loadMsgHistory(Forum* pForum)
 {
 	NULL_CHECK(pForum, );
 	int numOfSubjects = L_size(&pForum->subjectList);
-	NODE* currSubject = &pForum->subjectList.head.next;
+	NODE* currSubjectNode = pForum->subjectList.head.next;
 	int numOfMsgs = pForum->currentUser->msgHistory.numOfMsgs;
 	int documentedMsgsCounter = 0;
-	for (int i = 0; (i < numOfSubjects) && (documentedMsgsCounter == numOfMsgs); i++)	// go through all the subjects
+	for (int i = 0; (i < numOfSubjects) && (documentedMsgsCounter < numOfMsgs); i++)	// go through all the subjects
 	{
-		for (int j = 0; (j < ((Subject*)currSubject->key)->threadArrSize) && (documentedMsgsCounter == numOfMsgs); j++)	// go through all the threads
+		Subject* pCurrSubject = (Subject*)currSubjectNode->key;
+		for (int j = 0; (j < pCurrSubject->threadArrSize) && (documentedMsgsCounter < numOfMsgs); j++)	// go through all the threads
 		{
-			Thread* currThread = ((Subject*)currSubject->key)->threadArr[j];
-			for (int k = 0; (k < currThread->messageArrSize) && (documentedMsgsCounter == numOfMsgs); k++)	// go through all the messages
+			Thread* currThread = pCurrSubject->threadArr[j];
+			for (int k = 0; (k < currThread->messageArrSize) && (documentedMsgsCounter < numOfMsgs); k++)	// go through all the messages
 			{
 				Message* currMsg = &currThread->messageArr[k];
 				if (strcmp(currMsg->authorName, pForum->currentUser->name) == 0)
 				{
-					documentMsg(&pForum->currentUser->msgHistory, currMsg);
-					pForum->currentUser->msgHistory.numOfMsgs--;
+					documentMsgFromFile(&pForum->currentUser->msgHistory, currMsg, documentedMsgsCounter);
 					documentedMsgsCounter++;
 				}
 			}
 		}
-		currSubject = currSubject->next;
+		currSubjectNode = currSubjectNode->next;
 	}
 }
 

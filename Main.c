@@ -193,6 +193,18 @@ void testThreadBinaryFile()
 	printThread(&thread2);
 }
 
+void testUserMsgHistoryBinaryFile()
+{
+	User user1;
+	Thread thread1;
+	printf("Register user:\n");
+	initUser(&user1);
+	initThread(&thread1, &user1);
+	threadActionsMenu(&thread1, &user1);
+	FILE* fp = fopen("userHistoryTest.bin", "wb");
+	printf("Saving the ");
+}
+
 void testSubjectBinaryFilr()
 {
 	FILE* fp = fopen("userTest.bin", "rb");
