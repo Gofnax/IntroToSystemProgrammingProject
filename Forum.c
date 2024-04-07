@@ -118,8 +118,7 @@ int chooseSubject(LIST* pSubjectList, User* pCurrUser)
 			printf("The subjects are:\n");
 			displaySubjectList(pSubjectList);
 			printf("Choose action: (1 - Open Subject | 2 - Add a New Subject | 0 - Exit)\n");
-			(void)scanf("%d", &choice);
-			(void)gets(buff);	// buffer cleaning
+			NUM_INPUT_CLEAN_BUFF(choice, buff);
 		}
 		else
 		{
@@ -130,8 +129,7 @@ int chooseSubject(LIST* pSubjectList, User* pCurrUser)
 		{
 			case 1:
 				printf("Choose the subject:\n");
-				(void)scanf("%d", &subjectChoice);
-				(void)gets(buff);	// buffer cleaning
+				NUM_INPUT_CLEAN_BUFF(subjectChoice, buff);
 				if (subjectChoice < 1 || subjectChoice > L_size(pSubjectList))
 				{
 					printf("Invalid choice.\n");
@@ -189,10 +187,7 @@ int addUser(User* user, Forum* pForum)
 	if (user == NULL || pForum == NULL)
 		return -1;
 	User* temp = (User*)realloc(pForum->userArr, sizeof(User) * (pForum->userArrSize + 1));
-	if (temp == NULL)
-	{
-		return -1;
-	}
+	NULL_CHECK(temp, -1);
 	pForum->userArr = temp;
 	memcpy(&pForum->userArr[pForum->userArrSize], user, sizeof(User));
 	pForum->userArrSize++;
@@ -249,8 +244,7 @@ void forumMainMenu(Forum* pForum)
 	{
 		printf("Choose the desired action:\n");
 		printf("1 - View Forum Subjects\n2 - Start a Private Chat\n3 - View Your Message History\n0 - Save and Exit\n");
-		(void)scanf("%d", &userChoice);
-		(void)gets(buff);	// buffer cleaning
+		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 		switch (userChoice)
 		{
 			case 1:
@@ -312,8 +306,7 @@ void loginRegisterMenu(Forum* pForum)
 	do
 	{
 		printf("To login enter 1, to register enter 2:\n");
-		(void)scanf("%d", &userChoice);
-		(void)gets(buff);	// buffer cleaning
+		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 		switch (userChoice)
 		{
 			case 1:

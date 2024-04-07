@@ -71,8 +71,7 @@ void threadActionsMenu(Thread* pThread, User* pCurrentUser)
 	{
 		printf("Current thread: %s\n", pThread->title);
 		printf("Choose action: (1 - Write a New Message | 2 - Like a Message | 3 - Display All Messages | 0 - Exit Thread)\n");
-		(void)scanf("%d", &userChoice);
-		(void)gets(buff);	// buffer cleaning
+		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 		switch (userChoice)
 		{
 			case 1:
@@ -99,8 +98,7 @@ void likeMsg(Thread* pThread)
 	int userChoice;
 	char buff[2] = { 0 };
 	printf("Enter the number of the message you like:\n");
-	(void)scanf("%d", &userChoice);
-	(void)gets(buff);	// buffer cleaning
+	NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 	if (userChoice < 1 || userChoice > pThread->messageArrSize)
 	{
 		printf("No such message number\n");

@@ -30,8 +30,7 @@ void privateMsgBoxMenu(PrivateMsgBox* pPrivateBox, User* pUser)
 	do
 	{
 		printf("Choose action: (1 - Display Messages | 2 - Write a Message | 0 - Exit Private Messages)\n");
-		(void)scanf("%d", &userChoice);
-		(void)gets(buff);	// buffer cleaning
+		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 		switch (userChoice)
 		{
 			case 1:

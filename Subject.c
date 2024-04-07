@@ -47,8 +47,7 @@ void chooseThread(Subject* pSubject, User* pCurrUser)
 	do
 	{
 		printf("Choose a thread:\n");
-		(void)scanf("%d", &choice);
-		(void)gets(buff);	// buffer cleaning
+		NUM_INPUT_CLEAN_BUFF(choice, buff);
 		if (choice < 1 || choice > pSubject->threadArrSize)
 		{
 			printf("Invalid choice.\n");
@@ -92,8 +91,7 @@ void subjectActionsMenu(Subject* pSubject, User* pCurrUser)
 	{
 		printf("Current subject: %s\n", pSubject->title);
 		printf("Choose action: (1 - View Thread | 2 - Add a New Thread | 3 - Display Thread List | 0 - Exit Subject)\n");
-		(void)scanf("%d", &userChoice);
-		(void)gets(buff);	// buffer cleaning
+		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 		switch (userChoice)
 		{
 			case 1:

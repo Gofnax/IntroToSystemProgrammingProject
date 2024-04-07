@@ -72,6 +72,7 @@ void sortMsgs(UserMsgHistory* pHistory)
 {
 	NULL_CHECK(pHistory, );
 	int userChoice;
+	char buff[2] = { 0 };
 	do
 	{
 		printf("How do you want the messgaes to be sorted:\n");
@@ -80,7 +81,7 @@ void sortMsgs(UserMsgHistory* pHistory)
 			printf("(%d - %s) ", i, SortTypeStr[i]);
 		}
 		printf("\n");
-		(void)scanf("%d", &userChoice);
+		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 	} while (userChoice < 1 || userChoice >= eNofSorts);
 	switch (userChoice)
 	{
@@ -154,20 +155,15 @@ void searchMsgByTimeHelper(Message* pMsg)
 	NULL_CHECK(pMsg, );
 	char buff[2] = { 0 };
 	printf("Enter message year:\n");
-	(void)scanf("%d", &pMsg->timeWritten.year);
-	(void)gets(buff);	// buffer cleaning
+	NUM_INPUT_CLEAN_BUFF(pMsg->timeWritten.year, buff);
 	printf("Enter message month:\n");
-	(void)scanf("%d", &pMsg->timeWritten.month);
-	(void)gets(buff);	// buffer cleaning
+	NUM_INPUT_CLEAN_BUFF(pMsg->timeWritten.month, buff);
 	printf("Enter message day:\n");
-	(void)scanf("%d", &pMsg->timeWritten.day);
-	(void)gets(buff);	// buffer cleaning
+	NUM_INPUT_CLEAN_BUFF(pMsg->timeWritten.day, buff);
 	printf("Enter message hour:\n");
-	(void)scanf("%d", &pMsg->timeWritten.hour);
-	(void)gets(buff);	// buffer cleaning
+	NUM_INPUT_CLEAN_BUFF(pMsg->timeWritten.hour, buff);
 	printf("Enter message minute:\n");
-	(void)scanf("%d", &pMsg->timeWritten.minute);
-	(void)gets(buff);	// buffer cleaning
+	NUM_INPUT_CLEAN_BUFF(pMsg->timeWritten.minute, buff);
 }
 
 void searchMsgByLikesHelper(Message* pMsg)
@@ -176,8 +172,7 @@ void searchMsgByLikesHelper(Message* pMsg)
 	int likesInput = 0;
 	char buff[2] = { 0 };
 	printf("Enter the number of likes the message has:\n");
-	(void)scanf("%d", &likesInput);
-	(void)gets(buff);	// buffer cleaning
+	NUM_INPUT_CLEAN_BUFF(likesInput, buff);
 	pMsg->likesCounter = likesInput;
 }
 
@@ -187,8 +182,7 @@ void searchMsgByLengthHelper(Message* pMsg)
 	int len = 0;
 	char buff[2] = { 0 };
 	printf("Enter the length of the message:\n");
-	(void)scanf("%d", &len);
-	(void)gets(buff);	// buffer cleaning
+	NUM_INPUT_CLEAN_BUFF(len, buff);
 	if (len < 1 || len > 254)
 	{
 		printf("No message with such length.\n");
@@ -234,8 +228,7 @@ void msgHistoryActionMenu(UserMsgHistory* pHistory)
 	do
 	{
 		printf("Choose action: (1 - Display Past Messages | 2 - Sort Messages | 3 - Find a Message | 0 - Exit)\n");
-		(void)scanf("%d", &userChoice);
-		(void)gets(buff);	// buffer cleaning
+		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 		switch (userChoice)
 		{
 			case 1:
