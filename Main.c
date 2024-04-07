@@ -30,16 +30,6 @@ int main(void)
 	Forum forum1;
 	forumLoadMenu(&forum1);
 	forumMainMenu(&forum1);
-
-	//testPrivateMsgBox();
-	//testTimeStampBinaryFile();
-	//testMessageBinaryFile();
-	//testUserBinaryFile();
-	//testThread();
-	//testSubject();
-	//testThreadBinaryFile();
-	//testSubjectBinaryFilr();
-	//testForumBinaryFile();
 }
 
 void forumLoadMenu(Forum* pForum)
