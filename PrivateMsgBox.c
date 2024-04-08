@@ -138,12 +138,18 @@ int readPrivateMsgBoxFromBFile(FILE* fp, PrivateMsgBox* pPrivateBox)
 
 int savePrivateMsgBoxToTextFile(const PrivateMsgBox* privateMsgBox, FILE* fp)
 {
-	if (fp == NULL)
+	if (fp == NULL || privateMsgBox == NULL)
 	{
 		return -1;
 	}
-	fprintf(fp, "%s\n", privateMsgBox->user1->name);
-	fprintf(fp, "%s\n", privateMsgBox->user2->name);
+	if (saveUserToTextFile(privateMsgBox->user1, fp) != 1)
+	{
+		return -1;
+	}
+	if (saveUserToTextFile(privateMsgBox->user2, fp) != 1)
+	{
+		return -1;
+	}
 	fprintf(fp, "%d\n", privateMsgBox->numOfMsgs);
 	for (int i = 0; i < privateMsgBox->numOfMsgs; i++)
 	{
@@ -158,8 +164,18 @@ int loadPrivateMsgBoxFromTextFile(PrivateMsgBox* privateMsgBox, FILE* fp)
 	{
 		return -1;
 	}
-	(void)fscanf(fp, "%[^\n]%*c", privateMsgBox->user1->name);
-	(void)fscanf(fp, "%[^\n]%*c", privateMsgBox->user2->name);
+	privateMsgBox->user1 = (User*)malloc(sizeof(User));
+	NULL_CHECK(privateMsgBox->user1, -1);
+	if (loadUserFromTextFile(privateMsgBox->user1, fp) != 1)
+	{
+		return -1;
+	}
+	privateMsgBox->user2 = (User*)malloc(sizeof(User));
+	NULL_CHECK(privateMsgBox->user2, -1);
+	if (loadUserFromTextFile(privateMsgBox->user2, fp) != 1)
+	{
+		return -1;
+	}
 	(void)fscanf(fp, "%d\n", &privateMsgBox->numOfMsgs);
 	for (int i = 0; i < privateMsgBox->numOfMsgs; i++)
 	{

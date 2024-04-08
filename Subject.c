@@ -170,7 +170,7 @@ int readSubjectFromBFile(FILE* fp, Subject* pSubject)
 
 int saveSubjectToTextFile(const Subject* pSubject, FILE* fp)
 {
-	if (fp == NULL)
+	if (fp == NULL || pSubject == NULL)
 	{
 		return -1;
 	}
@@ -189,6 +189,8 @@ int loadSubjectFromTextFile(Subject* pSubject, FILE* fp)
 	{
 		return -1;
 	}
+	pSubject->title = (char*)malloc(sizeof(char) * MAX_TITLE_NAME);
+	NULL_CHECK(pSubject->title, -1);
 	(void)fscanf(fp, "%[^\n]%*c", pSubject->title);
 	(void)fscanf(fp, "%d\n", &pSubject->threadArrSize);
 	pSubject->threadArr = (Thread**)malloc(sizeof(Thread*) * pSubject->threadArrSize);

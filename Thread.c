@@ -166,10 +166,10 @@ int saveThreadToTextFile(const Thread* pThread, FILE* fp)
 	}
 	fprintf(fp, "%d\n", pThread->messageArrSize);
 	fprintf(fp, "%s\n", pThread->title);
-	fprintf(fp, "%s\n", pThread->primaryMsg.msgText);
+	saveMessageToTextFile(&pThread->primaryMsg, fp);
 	for (int i = 0; i < pThread->messageArrSize; i++)
 	{
-		fprintf(fp, "%s\n", pThread->messageArr[i].msgText);
+		saveMessageToTextFile(&pThread->messageArr[i], fp);
 	}
 	return 1;
 }
@@ -184,14 +184,18 @@ int loadThreadFromTextFile(Thread* pThread, FILE* fp)
 	{
 		return -1;
 	}
+	pThread->title = (char*)malloc(sizeof(char) * MAX_TITLE_NAME);
+	NULL_CHECK(pThread->title, -1);
 	if (fscanf(fp, "%[^\n]%*c", pThread->title) != 1)
 	{
 		return -1;
 	}
-	if (loadMessageFromTextFile(&pThread->primaryMsg, fp) != 1)
+	Message tmp;
+	if (loadMessageFromTextFile(&tmp, fp) != 1)
 	{
 		return -1;
 	}
+	pThread->primaryMsg = tmp;
 	pThread->messageArr = (Message*)malloc(sizeof(Message) * pThread->messageArrSize);
 	NULL_CHECK(pThread->messageArr, -1);
 	for (int i = 0; i < pThread->messageArrSize; i++)

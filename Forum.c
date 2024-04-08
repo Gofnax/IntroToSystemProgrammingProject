@@ -431,7 +431,7 @@ int readForumFromBFile(FILE* fp, Forum* pForum)
 
 int saveForumToTextFile(const Forum* pForum, FILE* fp)
 {
-	if (fp == NULL)
+	if (fp == NULL || pForum == NULL)
 	{
 		return -1;
 	}
@@ -466,8 +466,6 @@ int saveSubjectListToTextFile(const LIST subjectList, FILE* fp)
 	NODE* tmp = subjectList.head.next;
 	for (int i = 0; i < size; i++)
 	{
-
-		//Subject* pSubject = (Subject*)L_getAt(&subjectList, i);
 		saveSubjectToTextFile((Subject*)tmp->key, fp);
 		tmp = tmp->next;
 	}
@@ -476,7 +474,7 @@ int saveSubjectListToTextFile(const LIST subjectList, FILE* fp)
 
 int savePrivateMsgBoxArrToTextFile(const PrivateMsgBox* privateMsgBoxArr, const int privateMsgBoxArrSize, FILE* fp)
 {
-	if (fp == NULL)
+	if (fp == NULL || privateMsgBoxArr == NULL)
 	{
 		return -1;
 	}
@@ -499,15 +497,14 @@ int loadForumFromTextFile(Forum* pForum, FILE* fp)
 		return -1;
 	}
 	(void)fscanf(fp, "%d\n", &pForum->userArrSize);
+	pForum->userArr = (User*)malloc(pForum->userArrSize * sizeof(User));
+	NULL_CHECK(pForum->userArr, -1);
 	for (int i = 0; i < pForum->userArrSize; i++)
 	{
-		User* user = (User*)malloc(sizeof(User));
-		NULL_CHECK(user, -1);
-		if (loadUserFromTextFile(user, fp) != 1)
+		if (loadUserFromTextFile(&pForum->userArr[i], fp) != 1)
 		{
 			return -1;
 		}
-		pForum->userArr[i] = *user;
 	}
 	User* currentUser = (User*)malloc(sizeof(User));
 	NULL_CHECK(currentUser, -1);
