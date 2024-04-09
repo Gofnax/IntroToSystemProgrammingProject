@@ -37,6 +37,8 @@ void displayMostActiveUser(Forum* pForum);
 int choosePrivateChatPartner(User* pCurrentUser, Forum* pForum);
 void loginRegisterMenu(Forum* pForum);
 void loadMsgHistory(Forum* pForum);
+void printForum(const Forum* pForum);
+void printSubjectList(const LIST* pSubjectList);
 int saveForumToBFile(FILE* fp, Forum* pForum);
 int readForumFromBFile(FILE* fp, Forum* pForum);
 int saveForumToTextFile(const Forum* pForum, FILE* fp);

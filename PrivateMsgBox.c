@@ -81,6 +81,13 @@ void printPrivateMessagesArr(const PrivateMsgBox* pPrivateBox)
 	generalFunction((void*)pPrivateBox->messageArr, pPrivateBox->numOfMsgs, sizeof(Message), (void(*)(void*))printMsg);
 }
 
+void printPrivateMsgBox(const PrivateMsgBox* pPrivateBox)
+{
+	NULL_CHECK(pPrivateBox, );
+	printf("Private message box between %s and %s:\n", pPrivateBox->userName1, pPrivateBox->userName2);
+	printPrivateMsgs(pPrivateBox);
+}
+
 int savePrivateMsgBoxToBFile(FILE* fp, const PrivateMsgBox* pPrivateBox)
 {
 	if (fp == NULL || pPrivateBox == NULL)

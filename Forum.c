@@ -241,7 +241,8 @@ void forumMainMenu(Forum* pForum)
 	do
 	{
 		printf("Choose the desired action:\n");
-		printf("1 - View Forum Subjects\n2 - Start a Private Chat\n3 - View Your Message History\n4 - Display User with Most Messages\n0 - Save and Exit\n");
+		printf("1 - View Forum Subjects\n2 - Start a Private Chat\n3 - View Your Message History\n");
+		printf("4 - Display User with Most Messages\n5 - Print the WHOLE Forum\n0 - Save and Exit\n");
 		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 		switch (userChoice)
 		{
@@ -256,6 +257,9 @@ void forumMainMenu(Forum* pForum)
 				break;
 			case 4:
 				displayMostActiveUser(pForum);
+				break;
+			case 5:
+				printForum(pForum);
 				break;
 			case 0:
 				fp = fopen(SYSTEM_TEXT_FILE, "w");
@@ -367,6 +371,32 @@ void loadMsgHistory(Forum* pForum)
 		}
 		currSubjectNode = currSubjectNode->next;
 	}
+}
+
+void printForum(const Forum* pForum)
+{
+	NULL_CHECK(pForum, );
+	printf("Forum:\n");
+	printf("Subjects:\n");
+	printSubjectList(&pForum->subjectList);
+	printf("Users:\n");
+	for (int i = 0; i < pForum->userArrSize; i++)
+	{
+		printUser(&pForum->userArr[i]);
+	}
+	printf("Private message boxes:\n");
+	for (int i = 0; i < pForum->privateMsgBoxArrSize; i++)
+	{
+		printPrivateMsgBox(&pForum->privateMsgBoxArr[i]);
+	}
+
+}
+
+void printSubjectList(const LIST* pSubjectList)
+{
+	NULL_CHECK(pSubjectList, );
+	L_print(pSubjectList, printSubjectWithThread);
+
 }
 
 int saveForumToBFile(FILE* fp, Forum* pForum)

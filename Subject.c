@@ -120,6 +120,17 @@ void subjectActionsMenu(Subject* pSubject, User* pCurrUser)
 	} while (userChoice != 0);
 }
 
+void printSubjectWithThread(const Subject* pSubject)
+{
+	NULL_CHECK(pSubject, );
+	printf("Subject: %s\n", pSubject->title);
+	printf("Threads:\n");
+	for (int i = 0; i < pSubject->threadArrSize; i++)
+	{
+		printThread(pSubject->threadArr[i]);
+	}
+}
+
 int saveSubjectToBFile(FILE* fp, const Subject* pSubject)
 {
 	if (fp == NULL || pSubject == NULL)

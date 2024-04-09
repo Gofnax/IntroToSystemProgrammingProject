@@ -54,6 +54,13 @@ int isSamePassword(User* pUser, char* pass)
 	return strcmp(pUser->password, pass);
 }
 
+void printUser(const User* pUser)
+{
+	NULL_CHECK(pUser, );
+	printf("Username: %s\n", pUser->name);
+	printf("Number of Messages: %d\n", pUser->msgHistory.numOfMsgs);
+}
+
 int saveUserToBFile(FILE* fp, const User* pUser)
 {
 	if (fp == NULL || pUser == NULL)
