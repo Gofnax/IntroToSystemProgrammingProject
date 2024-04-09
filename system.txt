@@ -1,32 +1,4 @@
 2
-Food
-1
-2
-Recipe for Banana Bread
-Hi! I tried yesterday making some banana bread, but apparently just trying to shove a banana into a loaf of bread isn't the recipe. Does some1 have a better one?
-Random Guy
-0
-7
-4
-2024
-13
-17
-Maybe try making the dough yourself and mixing it with banana?
-Emil
-1
-7
-4
-2024
-13
-23
-Right on man!!!! Thanksss :D
-Random Guy
-0
-7
-4
-2024
-13
-24
 Games
 2
 1
@@ -65,96 +37,47 @@ Emil
 2024
 13
 32
+Food
+1
+2
+Recipe for Banana Bread
+Hi! I tried yesterday making some banana bread, but apparently just trying to shove a banana into a loaf of bread isn't the recipe. Does some1 have a better one?
+Random Guy
+0
+7
+4
+2024
+13
+17
+Maybe try making the dough yourself and mixing it with banana?
+Emil
+1
+7
+4
+2024
+13
+23
+Right on man!!!! Thanksss :D
+Random Guy
+0
+7
+4
+2024
+13
+24
 2
 Emil
 1234qwer
 3
-Maybe try making the dough yourself and mixing it with banana?
-Emil
-1
-7
-4
-2024
-13
-23
-Just to clarify, I REALLY don't want to google it myself :(
-Emil
-1
-7
-4
-2024
-12
-26
-I think they closed. There was a story about playing with their stocks or something.
-Emil
-0
-7
-4
-2024
-13
-32
+10
 Random Guy
 1234
 1
-Emil
-1234qwer
-3
-Maybe try making the dough yourself and mixing it with banana?
-Emil
-1
-7
-4
-2024
-13
-23
-Just to clarify, I REALLY don't want to google it myself :(
-Emil
-1
-7
-4
-2024
-12
-26
-I think they closed. There was a story about playing with their stocks or something.
-Emil
-0
-7
-4
-2024
-13
-32
+10
 1
 Emil
-1234qwer
-3
-Maybe try making the dough yourself and mixing it with banana?
-Emil
-1
-7
-4
-2024
-13
-23
-Just to clarify, I REALLY don't want to google it myself :(
-Emil
-1
-7
-4
-2024
-12
-26
-I think they closed. There was a story about playing with their stocks or something.
-Emil
-0
-7
-4
-2024
-13
-32
 Random Guy
-1234
-1
-2
+3
 Hello there!
 Emil
 0
@@ -171,3 +94,11 @@ Random Guy
 2024
 13
 20
+Good, and you?
+Emil
+0
+9
+4
+2024
+11
+19

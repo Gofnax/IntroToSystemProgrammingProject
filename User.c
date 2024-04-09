@@ -98,10 +98,7 @@ int saveUserToTextFile(const User* user, FILE* fp)
 	fprintf(fp, "%s\n", user->name);
 	fprintf(fp, "%s\n", user->password);
 	fprintf(fp, "%d\n", user->msgHistory.numOfMsgs);
-	for (int i = 0; i < user->msgHistory.numOfMsgs; i++)
-	{
-		saveMessageToTextFile(user->msgHistory.msgHistory[i], fp);
-	}
+	fprintf(fp, "%d\n", user->msgHistory.maxNumOfMsgs);
 	return 1;
 }
 
@@ -111,28 +108,25 @@ int loadUserFromTextFile(User* user, FILE* fp)
 	{
 		return -1;
 	}
-	char tmpName[USERNAME_LEN];
+	char tmpName[USERNAME_LEN] = { 0 };
+	user->name = (char*)malloc(USERNAME_LEN * sizeof(char));
+	NULL_CHECK(user->name, -1);
 	if (fscanf(fp, "%[^\n]%*c", tmpName) != 1)
 	{
 		return -1;
 	}
-	user->name = tmpName;
+	strncpy(user->name, tmpName, USERNAME_LEN);
 	if (fscanf(fp, "%s\n", user->password) != 1)
 	{
 		return -1;
 	}
-	(void)fscanf(fp, "%d\n", &user->msgHistory.numOfMsgs);
-	for (int i = 0; i < user->msgHistory.numOfMsgs; i++)
+	if (fscanf(fp, "%d\n", &user->msgHistory.numOfMsgs) != 1)
 	{
-		user->msgHistory.msgHistory = (Message**)malloc(sizeof(Message*) * user->msgHistory.numOfMsgs);
-		NULL_CHECK(user->msgHistory.msgHistory, -1);
-		Message* message = (Message*)malloc(sizeof(Message));
-		NULL_CHECK(message, -1);
-		if (loadMessageFromTextFile(message, fp) != 1)
-		{
-			return -1;
-		}
-		user->msgHistory.msgHistory[i] = message;
+		return -1;
+	}
+	if (fscanf(fp, "%d\n", &user->msgHistory.maxNumOfMsgs) != 1)
+	{
+		return -1;
 	}
 	return 1;
 }

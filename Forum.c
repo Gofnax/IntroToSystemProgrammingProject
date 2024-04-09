@@ -241,7 +241,7 @@ void forumMainMenu(Forum* pForum)
 	do
 	{
 		printf("Choose the desired action:\n");
-		printf("1 - View Forum Subjects\n2 - Start a Private Chat\n3 - View Your Message History\n0 - Save and Exit\n");
+		printf("1 - View Forum Subjects\n2 - Start a Private Chat\n3 - View Your Message History\n4 - Display User with Most Messages\n0 - Save and Exit\n");
 		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 		switch (userChoice)
 		{
@@ -253,6 +253,9 @@ void forumMainMenu(Forum* pForum)
 				break;
 			case 3:
 				msgHistoryActionMenu(&pForum->currentUser->msgHistory);
+				break;
+			case 4:
+				displayMostActiveUser(pForum);
 				break;
 			case 0:
 				fp = fopen(SYSTEM_TEXT_FILE, "w");
@@ -267,6 +270,24 @@ void forumMainMenu(Forum* pForum)
 				printf("Unknown option selected.\n");
 		}
 	} while (userChoice != 0);
+}
+
+void displayMostActiveUser(Forum* pForum)
+{
+	NULL_CHECK(pForum, );
+	if (pForum->userArrSize == 0)
+	{
+		printf("No users in the system.\n");
+		return;
+	}
+	User* mostActive = &pForum->userArr[0];
+	for (int i = 1; i < pForum->userArrSize; i++)
+	{
+		if (pForum->userArr[i].msgHistory.numOfMsgs > mostActive->msgHistory.numOfMsgs)
+			mostActive = &pForum->userArr[i];
+	}
+	printf("The user with the most messages is: %s\n", mostActive->name);
+	printf("They have posted %d messages!\n", mostActive->msgHistory.numOfMsgs);
 }
 
 int choosePrivateChatPartner(User* pCurrentUser, Forum* pForum)
@@ -444,10 +465,6 @@ int saveForumToTextFile(const Forum* pForum, FILE* fp)
 	{
 		saveUserToTextFile(&pForum->userArr[i], fp);
 	}
-	if (saveUserToTextFile(pForum->currentUser, fp) != 1)
-	{
-		return -1;
-	}
 	if (savePrivateMsgBoxArrToTextFile(pForum->privateMsgBoxArr, pForum->privateMsgBoxArrSize, fp) != 1)
 	{
 		return -1;
@@ -492,28 +509,30 @@ int loadForumFromTextFile(Forum* pForum, FILE* fp)
 	{
 		return -1;
 	}
+	L_init(&pForum->subjectList);
 	if (loadSubjectListFromTextFile(&pForum->subjectList, fp) != 1)
 	{
 		return -1;
 	}
 	(void)fscanf(fp, "%d\n", &pForum->userArrSize);
-	pForum->userArr = (User*)malloc(pForum->userArrSize * sizeof(User));
+	pForum->userArr = (User*)malloc(sizeof(User)*pForum->userArrSize);
 	NULL_CHECK(pForum->userArr, -1);
 	for (int i = 0; i < pForum->userArrSize; i++)
 	{
-		if (loadUserFromTextFile(&pForum->userArr[i], fp) != 1)
+		User* user = (User*)malloc(sizeof(User));
+		NULL_CHECK(user, -1);
+		if (loadUserFromTextFile(user, fp) != 1)
 		{
 			return -1;
 		}
+		pForum->userArr[i] = *user;
+		pForum->userArr[i].msgHistory.msgHistory = (Message**)malloc(sizeof(Message*) * pForum->userArr[i].msgHistory.maxNumOfMsgs);
 	}
-	User* currentUser = (User*)malloc(sizeof(User));
-	NULL_CHECK(currentUser, -1);
-	if (loadUserFromTextFile(currentUser, fp) != 1)
-	{
-		return -1;
-	}
-	pForum->currentUser = currentUser;
-	if (loadPrivateMsgBoxArrFromTextFile(pForum->privateMsgBoxArr, pForum->privateMsgBoxArrSize, fp) != 1)
+	pForum->currentUser=(User*)malloc(sizeof(User));
+	pForum->currentUser = NULL;
+	pForum->privateMsgBoxArr = (PrivateMsgBox*)malloc(sizeof(PrivateMsgBox));
+	NULL_CHECK(pForum->privateMsgBoxArr, -1);
+	if (loadPrivateMsgBoxArrFromTextFile(pForum->privateMsgBoxArr, pForum, fp) != 1)
 	{
 		return -1;
 	}
@@ -541,14 +560,14 @@ int loadSubjectListFromTextFile(LIST* subjectList, FILE* fp)
 	return 1;
 }
 
-int loadPrivateMsgBoxArrFromTextFile(PrivateMsgBox* privateMsgBoxArr, int privateMsgBoxArrSize, FILE* fp)
+int loadPrivateMsgBoxArrFromTextFile(PrivateMsgBox* privateMsgBoxArr, Forum* pForum, FILE* fp)
 {
-	if (fp == NULL || privateMsgBoxArr == NULL)
+	if (fp == NULL || privateMsgBoxArr == NULL || pForum == NULL)
 	{
 		return -1;
 	}
-	(void)fscanf(fp, "%d\n", &privateMsgBoxArrSize);
-	for (int i = 0; i < privateMsgBoxArrSize; i++)
+	(void)fscanf(fp, "%d\n", &pForum->privateMsgBoxArrSize);
+	for (int i = 0; i < pForum->privateMsgBoxArrSize; i++)
 	{
 		PrivateMsgBox* privateMsgBox = (PrivateMsgBox*)malloc(sizeof(PrivateMsgBox));
 		NULL_CHECK(privateMsgBox, -1);
@@ -557,6 +576,13 @@ int loadPrivateMsgBoxArrFromTextFile(PrivateMsgBox* privateMsgBoxArr, int privat
 			return -1;
 		}
 		privateMsgBoxArr[i] = *privateMsgBox;
+		for (int j = 0; j < pForum->userArrSize; j++)
+		{
+			if (strcmp(pForum->userArr[j].name, pForum->privateMsgBoxArr[i].userName1) == 0)
+				pForum->privateMsgBoxArr[i].user1 = &pForum->userArr[j];
+			else if (strcmp(pForum->userArr[j].name, pForum->privateMsgBoxArr[i].userName2) == 0)
+				pForum->privateMsgBoxArr[i].user2 = &pForum->userArr[j];
+		}
 	}
 	return 1;
 }

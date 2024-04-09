@@ -185,7 +185,6 @@ int loadThreadFromTextFile(Thread* pThread, FILE* fp)
 		return -1;
 	}
 	pThread->title = (char*)malloc(sizeof(char) * MAX_TITLE_NAME);
-	NULL_CHECK(pThread->title, -1);
 	if (fscanf(fp, "%[^\n]%*c", pThread->title) != 1)
 	{
 		return -1;

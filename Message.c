@@ -106,7 +106,7 @@ int readMsgFromBFile(FILE* fp, Message* pMsg)
 
 int saveMessageToTextFile(const Message* message, FILE* fp)
 {
-	if (fp == NULL || message == NULL)
+	if (fp == NULL)
 	{
 		return -1;
 	}
