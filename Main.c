@@ -27,22 +27,27 @@ void forumLoadMenu(Forum* pForum)
 	do
 	{
 		printf("How would you like to load the system?\n");
-		printf("(1 - Using Text Files | 2 - Using Binary Files | 3 - Clean System)\n");
+		printf("(1 - Using Text Files | 2 - Using Binary Files)\n");
 		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
 		switch (userChoice)
 		{
 			case 1:
 				fp = fopen(SYSTEM_TEXT_FILE, "r");
-				loadForumFromTextFile(pForum, fp);
+				if (loadForumFromTextFile(pForum, fp) == -1)
+				{
+					printf("There was an issue loading the system from the file. Initiating a clean sysytem.\n");
+					initForum(pForum);
+				}
 				fclose(fp);
 				break;
 			case 2:
 				fp = fopen(SYSTEM_BIN_FILE, "rb");
-				readForumFromBFile(fp, pForum);
+				if(readForumFromBFile(fp, pForum) == -1)
+				{
+					printf("There was an issue loading the system from the file. Initiating a clean sysytem.\n");
+					initForum(pForum);
+				}
 				fclose(fp);
-				break;
-			case 3:
-				initForum(pForum);
 				break;
 			default:
 				printf("Unknown option selected.\n");
