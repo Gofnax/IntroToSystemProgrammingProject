@@ -86,7 +86,7 @@ int registerUser(Forum* pForum)
 	return 1;
 }
 
-void displayMsgHistory(User* user)
+void displayMsgHistory(const User* user)
 {
 	NULL_CHECK(user, );
 	printf("Displaying message history for %s\n", user->name);
@@ -96,7 +96,7 @@ void displayMsgHistory(User* user)
 	}
 }
 
-void displaySubjectList(LIST* pSubjectList)
+void displaySubjectList(const LIST* pSubjectList)
 {
 	NULL_CHECK(pSubjectList, );
 	L_print(pSubjectList, printSubjectTitle);
@@ -166,7 +166,7 @@ int addSubject(LIST* pSubjectList)
 	return 1;
 }
 
-int isUserInArr(User* user, User* userArr, int userArrSize)
+int isUserInArr(const User* user, const User* userArr, int userArrSize)
 {
 	if (user == NULL || userArr == NULL)
 		return -1;
@@ -180,7 +180,7 @@ int isUserInArr(User* user, User* userArr, int userArrSize)
 	return -1;
 }
 
-int addUser(User* user, Forum* pForum)
+int addUser(const User* user, Forum* pForum)
 {
 	if (user == NULL || pForum == NULL)
 		return -1;
@@ -192,7 +192,7 @@ int addUser(User* user, Forum* pForum)
 	return 1;
 }
 
-void startPrivateConversation(User* pCurrentUser, User* pUser, Forum* pForum)
+void startPrivateConversation(const User* pCurrentUser, const User* pUser, Forum* pForum)
 {
 	if (pCurrentUser == NULL || pUser == NULL || pForum == NULL)
 		return;
@@ -216,7 +216,7 @@ void startPrivateConversation(User* pCurrentUser, User* pUser, Forum* pForum)
 	privateMsgBoxMenu(pPrivateBox, pCurrentUser);
 }
 
-int doesMsgBoxExist(User* pCurrentUser, User* pUser, PrivateMsgBox* privateMsgBoxArr, int privateMsgBoxArrSize)
+int doesMsgBoxExist(const User* pCurrentUser, const User* pUser, const PrivateMsgBox* privateMsgBoxArr, int privateMsgBoxArrSize)
 {
 	if (pCurrentUser == NULL || pUser == NULL || privateMsgBoxArr == NULL)
 		return -1;
@@ -276,7 +276,7 @@ void forumMainMenu(Forum* pForum)
 	} while (userChoice != 0);
 }
 
-void displayMostActiveUser(Forum* pForum)
+void displayMostActiveUser(const Forum* pForum)
 {
 	NULL_CHECK(pForum, );
 	if (pForum->userArrSize == 0)
@@ -399,7 +399,7 @@ void printSubjectList(const LIST* pSubjectList)
 
 }
 
-int saveForumToBFile(FILE* fp, Forum* pForum)
+int saveForumToBFile(FILE* fp, const Forum* pForum)
 {
 	if(fp == NULL || pForum == NULL)
 		return -1;

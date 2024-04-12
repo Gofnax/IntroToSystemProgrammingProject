@@ -1,5 +1,19 @@
 #include "TimeStamp.h"
 
+
+int	initTime(TimeStamp* pTime)
+{
+	NULL_CHECK(pTime, -1);
+	time_t currTimeTmp = time(&currTimeTmp);
+	struct tm* currTime = localtime(&currTimeTmp);
+	pTime->day = currTime->tm_mday;
+	pTime->month = currTime->tm_mon + 1;	//tm_mon is between 0 and 11
+	pTime->year = currTime->tm_year + 1900;	//tm_year counts years since 1900
+	pTime->hour = currTime->tm_hour;
+	pTime->minute = currTime->tm_min;
+	return 1;
+}
+
 char* getTimeString(const TimeStamp* pTime)
 {
 	NULL_CHECK(pTime, NULL);
@@ -27,19 +41,6 @@ void formatTimeElement(char* charElement, int len, int numElement)
 	{
 		snprintf(charElement, 3, "%d", numElement);
 	}
-}
-
-int	initTime(TimeStamp* pTime)
-{
-	NULL_CHECK(pTime, -1);
-	time_t currTimeTmp = time(&currTimeTmp);
-	struct tm* currTime = localtime(&currTimeTmp);
-	pTime->day = currTime->tm_mday;
-	pTime->month = currTime->tm_mon + 1;	//tm_mon is between 0 and 11
-	pTime->year = currTime->tm_year + 1900;	//tm_year counts years since 1900
-	pTime->hour = currTime->tm_hour;
-	pTime->minute = currTime->tm_min;
-	return 1;
 }
 
 int compareTime(const TimeStamp* pTime1, const TimeStamp* pTime2)

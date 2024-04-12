@@ -17,7 +17,7 @@ typedef struct
 int initUser(User* pUser);
 int initUserName(User* pUser);
 int initUserPassword(User* pUser);
-int isSamePassword(User* pUser, char* pass);
+int isSamePassword(const User* pUser, char* pass);
 void printUser(const User* pUser);
 int saveUserToBFile(FILE* fp, const User* pUser);
 int readUserFromBFile(FILE* fp, User* pUser);

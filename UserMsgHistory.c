@@ -13,7 +13,7 @@ void initMsgHistory(UserMsgHistory* pHistory)
 	pHistory->currentSort = eNoSort;
 }
 
-int documentMsg(UserMsgHistory* pHistory, Message* pMsg)
+int documentMsg(UserMsgHistory* pHistory, const Message* pMsg)
 {
 	if (pHistory == NULL || pMsg == NULL)
 		return -1;
@@ -30,7 +30,7 @@ int documentMsg(UserMsgHistory* pHistory, Message* pMsg)
 	return 1;
 }
 
-int documentMsgFromFile(UserMsgHistory* pHistory, Message* pMsg, int index)
+int documentMsgFromFile(UserMsgHistory* pHistory, const Message* pMsg, int index)
 {
 	if (pHistory == NULL || pMsg == NULL)
 		return -1;

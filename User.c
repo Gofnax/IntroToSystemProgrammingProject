@@ -48,7 +48,7 @@ int initUserPassword(User* pUser)
 	return 1;
 }
 
-int isSamePassword(User* pUser, char* pass)
+int isSamePassword(const User* pUser, char* pass)
 {
 	NULL_CHECK(pUser, -1);
 	return strcmp(pUser->password, pass);

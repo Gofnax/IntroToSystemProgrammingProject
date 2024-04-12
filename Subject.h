@@ -11,7 +11,7 @@ typedef struct
 
 int initSubject(Subject* pSubject);
 int createSubjectTitle(Subject* pSubject);
-void printThreadArr(Thread** threadArr, int threadArrSize);
+void printThreadArr(const Thread** threadArr, int threadArrSize);
 void chooseThread(Subject* pSubject, User* pCurrUser);
 int  addThread(Subject* pSubject, Thread* pThread);
 void printSubject(const Subject* pSubject);

@@ -28,7 +28,7 @@ int createSubjectTitle(Subject* pSubject)
 	return 1;
 }
 
-void printThreadArr(Thread** threadArr, int threadArrSize)
+void printThreadArr(const Thread** threadArr, int threadArrSize)
 {
 	NULL_CHECK(threadArr, );
 	for (int i = 0; i < threadArrSize; i++)
