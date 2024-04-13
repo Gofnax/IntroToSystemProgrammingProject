@@ -212,7 +212,8 @@ void freeThreadContent(Thread* pThread)
 	NULL_CHECK(pThread, );
 	free(pThread->title);
 	freeMessageContents(&pThread->primaryMsg);
-	generalFunction((void*)pThread->messageArr, pThread->messageArrSize, sizeof(Message), (void(*)(void*))freeMessageContents);
+	generalFunction((void*)pThread->messageArr, pThread->messageArrSize, sizeof(Message), freeMessageContents);
+	free(pThread->messageArr);
 }
 
 void freeThread(Thread* pThread)

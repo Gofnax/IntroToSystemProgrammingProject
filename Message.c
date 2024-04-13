@@ -26,25 +26,29 @@ int createMsg(Message* pMsg, char* authorName)
 void printMsg(const Message* pMsg)
 {
 	NULL_CHECK(pMsg, );
+	char* timeString = getTimeString(&pMsg->timeWritten);
 	printf("----------------------------------------\n");	// 40 '-' for visuals
-	printf("Author: %s\n%s\n", pMsg->authorName, getTimeString(&pMsg->timeWritten));
+	printf("Author: %s\n%s\n", pMsg->authorName, timeString);
 	printf("--------------------\n");	// 20 '-' for visuals
 	printf("%s\n", pMsg->msgText);
 	printf("--------------------\n");	// 20 '-' for visuals
 	printf("Likes: %d\n", pMsg->likesCounter);
 	printf("----------------------------------------\n");	// 40 '-' for visuals
+	free(timeString);
 }
 
 void printMsgIndexed(const Message* pMsg, int index)
 {
 	NULL_CHECK(pMsg, );
+	char* timeString = getTimeString(&pMsg->timeWritten);
 	printf("----------------------------------------\n");	// 40 '-' for visuals
-	printf("%d) Author: %s\n%s\n", index, pMsg->authorName, getTimeString(&pMsg->timeWritten));
+	printf("%d) Author: %s\n%s\n", index, pMsg->authorName, timeString);
 	printf("--------------------\n");	// 20 '-' for visuals
 	printf("%s\n", pMsg->msgText);
 	printf("--------------------\n");	// 20 '-' for visuals
 	printf("Likes: %d\n", pMsg->likesCounter);
 	printf("----------------------------------------\n");	// 40 '-' for visuals
+	free(timeString);
 }
 
 int saveMsgToBFile(FILE* fp, const Message* pMsg)

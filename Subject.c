@@ -221,6 +221,7 @@ void freeSubjectContent(Subject* pSubject)
 	for (int i = 0; i < pSubject->threadArrSize; i++)
 	{
 		freeThread(pSubject->threadArr[i]);
+		//free(pSubject->threadArr[i]);
 	}
 	free(pSubject->threadArr);
 }

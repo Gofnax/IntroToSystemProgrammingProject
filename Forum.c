@@ -244,6 +244,7 @@ void forumMainMenu(Forum* pForum)
 		printf("1 - View Forum Subjects\n2 - Start a Private Chat\n3 - View Your Message History\n");
 		printf("4 - Display User with Most Messages\n5 - Print the WHOLE Forum\n0 - Save and Exit\n");
 		NUM_INPUT_CLEAN_BUFF(userChoice, buff);
+		int check;
 		switch (userChoice)
 		{
 			case 1:
@@ -630,7 +631,7 @@ void freeForumContent(Forum* pForum)
 		freePrivateMsgBoxContents(&pForum->privateMsgBoxArr[i]);
 	}
 	free(pForum->privateMsgBoxArr);
-	L_free(&pForum->subjectList, freeSubjectContent);
+	L_free(&pForum->subjectList, freeSubject);
 }
 
 void freeForum(Forum* pForum)

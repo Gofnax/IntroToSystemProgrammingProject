@@ -193,6 +193,7 @@ void freePrivateMsgBoxContents(PrivateMsgBox* pPrivateBox)
 {
 	NULL_CHECK(pPrivateBox, );
 	generalFunction((void*)pPrivateBox->messageArr, pPrivateBox->numOfMsgs, sizeof(Message), (void(*)(void*))freeMessageContents);
+	free(pPrivateBox->messageArr);
 	free(pPrivateBox->userName1);
 	free(pPrivateBox->userName2);
 }
